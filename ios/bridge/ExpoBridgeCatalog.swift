@@ -2,6 +2,42 @@ import Foundation
 
 @available(iOS 16.0, *)
 enum ExpoBridgeCatalog {
+  static func getCatalogSong(service: CatalogService, id: String) async throws -> [String: Any] {
+    try await AppleMusicBridgeError.rethrow {
+      try await service.getSong(id: id)
+    }
+  }
+
+  static func getCatalogAlbum(service: CatalogService, id: String) async throws -> [String: Any] {
+    try await AppleMusicBridgeError.rethrow {
+      try await service.getAlbum(id: id)
+    }
+  }
+
+  static func getCatalogArtist(service: CatalogService, id: String) async throws -> [String: Any] {
+    try await AppleMusicBridgeError.rethrow {
+      try await service.getArtist(id: id)
+    }
+  }
+
+  static func getCatalogPlaylist(service: CatalogService, id: String) async throws -> [String: Any] {
+    try await AppleMusicBridgeError.rethrow {
+      try await service.getPlaylist(id: id)
+    }
+  }
+
+  static func getCatalogStation(service: CatalogService, id: String) async throws -> [String: Any] {
+    try await AppleMusicBridgeError.rethrow {
+      try await service.getStation(id: id)
+    }
+  }
+
+  static func getCatalogMusicVideo(service: CatalogService, id: String) async throws -> [String: Any] {
+    try await AppleMusicBridgeError.rethrow {
+      try await service.getMusicVideo(id: id)
+    }
+  }
+
   static func catalogSearch(
     service: CatalogService,
     term: String,
