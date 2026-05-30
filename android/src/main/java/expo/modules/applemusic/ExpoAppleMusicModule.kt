@@ -22,20 +22,24 @@ class ExpoAppleMusicModule : Module() {
   private lateinit var authLauncher: AppContextActivityResultLauncher<MusicKitAuthInput, MusicKitAuthOutput>
   private var playbackObserver: AndroidPlaybackObserver? = null
 
+  @Volatile
+  private var playbackErrorHandlerWired = false
+
   private val moduleScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
   private val reactContext
     get() = requireNotNull(appContext.reactContext) { "React Application Context is null" }
 
   private val playbackController: AndroidPlaybackController
-    get() =
-      AndroidPlaybackController.getInstance(reactContext).also { controller ->
-        if (controller.playbackErrorHandler == null) {
-          controller.playbackErrorHandler = { error, operation ->
-            emitPlaybackError(error, operation)
-          }
-        }
-      }
+    get() = AndroidPlaybackController.getInstance(reactContext)
+
+  private fun wirePlaybackErrorHandlerOnce() {
+    if (playbackErrorHandlerWired) return
+    AndroidPlaybackController.getInstance(reactContext).playbackErrorHandler = { error, operation ->
+      emitPlaybackError(error, operation)
+    }
+    playbackErrorHandlerWired = true
+  }
 
   private val catalogService: AndroidCatalogService
     get() = AndroidCatalogService(reactContext)
@@ -72,6 +76,7 @@ class ExpoAppleMusicModule : Module() {
     )
 
     OnStartObserving {
+      wirePlaybackErrorHandlerOnce()
       val observer = AndroidPlaybackObserver(reactContext)
       observer.delegate =
         object : AndroidPlaybackObserverDelegate {
@@ -107,6 +112,7 @@ class ExpoAppleMusicModule : Module() {
             appContext.throwingActivity
           },
         )
+      wirePlaybackErrorHandlerOnce()
     }
 
     registerAuthBridge(
