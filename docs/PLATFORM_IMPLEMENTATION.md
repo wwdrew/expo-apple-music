@@ -2,7 +2,7 @@
 
 How each **public JS method** is implemented on iOS vs Android. The TypeScript API is identical; only the native transport differs.
 
-**Policy (iOS):** Use **MusicKit** when it can perform the operation. Use **REST** (`AppleMusicRestClient`) only for gaps (no MusicKit API, or REST-only writes). Both paths must emit the **same bridge object shape** as Android’s `AppleMusicJsonMapper` (see [TYPES.md](./TYPES.md), `fixtures/*.json`).
+**Policy (iOS):** Use **MusicKit** for auth, catalog (native-first with REST fallback), and **library playback** queue resolution. Use **REST** (`AppleMusicRestClient`) for library/history **reads**, REST-only writes, and catalog gaps. Both paths must emit the **same bridge object shape** as Android’s `AppleMusicJsonMapper` (see [TYPES.md](./TYPES.md), `fixtures/*.json`).
 
 **Policy (Android):** REST via `*RestClient` + `AppleMusicRestStack` + `AppleMusicJsonMapper` for all data reads/writes; MusicKit AAR for auth and playback.
 
@@ -43,15 +43,17 @@ How each **public JS method** is implemented on iOS vs Android. The TypeScript A
 
 ## Library (read)
 
+iOS library **reads** use REST for pagination parity with Android/web (`limit`/`offset`, `/v1/me/library/search`). Native `MusicLibraryRequest` remains for **playback** queue resolution in `QueueService` only.
+
 | JS API | iOS | Android |
 |--------|-----|---------|
-| `Library.getPlaylists()` | **Native** `MusicLibraryRequest<Playlist>` (+ track load for count) | REST |
-| `Library.getSongs()` | **Native** `MusicLibraryRequest<Song>` | REST |
-| `Library.getPlaylistTracks()` | **Native** library playlist + tracks | REST |
-| `Library.getArtists()` | **Native** `MusicLibraryRequest<Artist>` | REST |
-| `Library.getAlbums()` | **Native** `MusicLibraryRequest<Album>` | REST |
-| `Library.getMusicVideos()` | **Native** `MusicLibraryRequest<MusicVideo>` | REST |
-| `Library.search()` | **Native** `MusicLibrarySearchRequest` | REST `GET /v1/me/library/search` |
+| `Library.getPlaylists()` | REST | REST |
+| `Library.getSongs()` | REST | REST |
+| `Library.getPlaylistTracks()` | REST | REST |
+| `Library.getArtists()` | REST | REST |
+| `Library.getAlbums()` | REST | REST |
+| `Library.getMusicVideos()` | REST | REST |
+| `Library.search()` | REST `GET /v1/me/library/search` | REST `GET /v1/me/library/search` |
 | `Catalog.getByIds()` | REST `GET .../{type}?ids=` | REST |
 
 ---
@@ -60,8 +62,8 @@ How each **public JS method** is implemented on iOS vs Android. The TypeScript A
 
 | JS API | iOS | Android |
 |--------|-----|---------|
-| `History.getRecentlyPlayedResources()` | **Native** `MusicRecentlyPlayedContainerRequest` | REST `GET /v1/me/recent/played` |
-| `History.getRecentlyPlayedTracks()` | **Native** `MusicRecentlyPlayedRequest<Song>` | REST |
+| `History.getRecentlyPlayedResources()` | REST `GET /v1/me/recent/played` | REST `GET /v1/me/recent/played` |
+| `History.getRecentlyPlayedTracks()` | REST | REST |
 | `History.getHeavyRotation()` | REST | REST |
 | `History.getRecentlyPlayedStations()` | REST | REST |
 | `History.getRecentlyAdded()` | REST | REST |

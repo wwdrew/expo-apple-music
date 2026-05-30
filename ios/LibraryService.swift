@@ -1,13 +1,11 @@
 // LibraryService.swift
-// Handles user's Apple Music library operations.
+// Handles user's Apple Music library operations via REST (parity with Android/web).
 
 import Foundation
 import MusicKit
 
 @available(iOS 16.0, *)
 final class LibraryService {
-
-  // MARK: - Options
 
   func getArtists(musicUserToken: String, options: BridgePagination) async throws -> [[String: Any]] {
     let data = try await AppleMusicRestClient.getDataArray(
@@ -16,14 +14,6 @@ final class LibraryService {
       query: ["limit": "\(options.limit)", "offset": "\(options.offset)"]
     )
     return data.map(RestJsonMapper.mapArtist)
-  }
-
-  private func getArtistsNative(options: BridgePagination) async throws -> [[String: Any]] {
-    var request = MusicLibraryRequest<Artist>()
-    request.limit = options.limit
-    request.offset = options.offset
-    let response = try await request.response()
-    return response.items.map(MusicItemMapper.map)
   }
 
   func getAlbums(musicUserToken: String, options: BridgePagination) async throws -> [[String: Any]] {
@@ -35,16 +25,6 @@ final class LibraryService {
     return data.map(RestJsonMapper.mapAlbum)
   }
 
-  private func getAlbumsNative(options: BridgePagination) async throws -> [[String: Any]] {
-    var request = MusicLibraryRequest<Album>()
-    request.limit = options.limit
-    request.offset = options.offset
-    let response = try await request.response()
-    return response.items.map(MusicItemMapper.map)
-  }
-
-  // MARK: - Playlists
-
   func getPlaylists(musicUserToken: String, options: BridgePagination) async throws -> [[String: Any]] {
     let data = try await AppleMusicRestClient.getDataArray(
       path: "/v1/me/library/playlists",
@@ -52,22 +32,6 @@ final class LibraryService {
       query: ["limit": "\(options.limit)", "offset": "\(options.offset)"]
     )
     return data.map(RestJsonMapper.mapPlaylist)
-  }
-
-  private func getPlaylistsNative(options: BridgePagination) async throws -> [[String: Any]] {
-    var request = MusicLibraryRequest<Playlist>()
-    request.limit = options.limit
-    request.offset = options.offset
-
-    let response = try await request.response()
-
-    // Load tracks for accurate count
-    var playlists: [[String: Any]] = []
-    for playlist in response.items {
-      let detailed = try await playlist.with([.tracks])
-      playlists.append(MusicItemMapper.map(detailed))
-    }
-    return playlists
   }
 
   func getPlaylistSongs(musicUserToken: String, playlistId: String) async throws -> [[String: Any]] {
@@ -84,32 +48,6 @@ final class LibraryService {
     }
   }
 
-  private func getPlaylistSongsNative(playlistId: String) async throws -> [[String: Any]] {
-    let musicItemId = MusicItemID(playlistId)
-
-    var request = MusicLibraryRequest<Playlist>()
-    request.filter(matching: \.id, equalTo: musicItemId)
-
-    let response = try await request.response()
-    guard let playlist = response.items.first else {
-      throw LibraryServiceError.playlistNotFound
-    }
-
-    let detailed = try await playlist.with([.tracks])
-    var songs: [[String: Any]] = []
-
-    if let tracks = detailed.tracks {
-      for track in tracks {
-        if case .song(let song) = track {
-          songs.append(MusicItemMapper.map(song))
-        }
-      }
-    }
-    return songs
-  }
-
-  // MARK: - Songs
-
   func getSongs(musicUserToken: String, options: BridgePagination) async throws -> [[String: Any]] {
     let data = try await AppleMusicRestClient.getDataArray(
       path: "/v1/me/library/songs",
@@ -117,15 +55,6 @@ final class LibraryService {
       query: ["limit": "\(options.limit)", "offset": "\(options.offset)"]
     )
     return data.map(RestJsonMapper.mapSong)
-  }
-
-  private func getSongsNative(options: BridgePagination) async throws -> [[String: Any]] {
-    var request = MusicLibraryRequest<Song>()
-    request.limit = options.limit
-    request.offset = options.offset
-
-    let response = try await request.response()
-    return response.items.map(MusicItemMapper.map)
   }
 
   func getMusicVideos(musicUserToken: String, options: BridgePagination) async throws -> [[String: Any]] {
@@ -137,14 +66,6 @@ final class LibraryService {
     return data.map(RestJsonMapper.mapMusicVideo)
   }
 
-  private func getMusicVideosNative(options: BridgePagination) async throws -> [[String: Any]] {
-    var request = MusicLibraryRequest<MusicVideo>()
-    request.limit = options.limit
-    request.offset = options.offset
-    let response = try await request.response()
-    return response.items.map(MusicItemMapper.map)
-  }
-
   struct LibrarySearchResult {
     let songs: [[String: Any]]
     let albums: [[String: Any]]
@@ -153,38 +74,7 @@ final class LibraryService {
     let musicVideos: [[String: Any]]
   }
 
-  func search(musicUserToken: String, term: String, types: [String], options: BridgePagination) async throws -> LibrarySearchResult {
-    return try await searchViaRest(musicUserToken: musicUserToken, term: term, types: types, options: options)
-  }
-
-  private func searchNative(term: String, types: [String], options: BridgePagination) async throws -> LibrarySearchResult {
-    if options.offset > 0 {
-      return try await searchViaRest(musicUserToken: "", term: term, types: types, options: options)
-    }
-
-    let searchTypes = types.compactMap { Self.librarySearchableType($0) }
-    let resolvedTypes: [any MusicLibrarySearchable.Type]
-    if searchTypes.isEmpty {
-      resolvedTypes = [Song.self, Album.self, Artist.self, Playlist.self, MusicVideo.self]
-    } else {
-      resolvedTypes = searchTypes
-    }
-
-    var request = MusicLibrarySearchRequest(term: term, types: resolvedTypes)
-    request.limit = options.limit
-    let response = try await request.response()
-
-    return LibrarySearchResult(
-      songs: response.songs.map(MusicItemMapper.map),
-      albums: response.albums.map(MusicItemMapper.map),
-      artists: response.artists.map(MusicItemMapper.map),
-      playlists: response.playlists.map(MusicItemMapper.map),
-      musicVideos: response.musicVideos.map(MusicItemMapper.map)
-    )
-  }
-
-  /// MusicKit `MusicLibrarySearchRequest` has no `offset`; REST matches Android pagination.
-  private func searchViaRest(
+  func search(
     musicUserToken: String,
     term: String,
     types: [String],
@@ -241,18 +131,7 @@ final class LibraryService {
     }
   }
 
-  private static func librarySearchableType(_ type: String) -> (any MusicLibrarySearchable.Type)? {
-    switch type {
-    case "library-songs", "songs": return Song.self
-    case "library-albums", "albums": return Album.self
-    case "library-artists", "artists": return Artist.self
-    case "library-playlists", "playlists": return Playlist.self
-    case "library-music-videos", "music-videos", "musicVideos": return MusicVideo.self
-    default: return nil
-    }
-  }
-
-  // MARK: - Fetch Items by ID
+  // MARK: - Native MusicKit (library playback queue only)
 
   func fetchSong(id: MusicItemID) async throws -> Song? {
     var request = MusicLibraryRequest<Song>()
@@ -275,8 +154,6 @@ final class LibraryService {
     guard let playlist = response.items.first else { return nil }
     return try await playlist.with([.tracks])
   }
-
-  // MARK: - Extract Songs from Playlist
 
   func extractSongs(from playlist: Playlist) async throws -> [Song] {
     let detailed = try await playlist.with([.tracks])
