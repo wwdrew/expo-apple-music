@@ -80,8 +80,8 @@ final class PlaybackObserver {
     // Capture dependencies outside the task to avoid capturing self
     let playbackController = self.playbackController
     let statusTracker = self.statusTracker
-    weak var weakDelegate = self.delegate
-    weak var weakSelf = self
+    weak let weakDelegate = self.delegate
+    weak let weakSelf = self
     
     stateObservationTask = Task.detached {
       // Use AsyncStream to bridge objectWillChange
@@ -139,7 +139,7 @@ final class PlaybackObserver {
     
     // Capture dependencies outside the task to avoid capturing self
     let playbackController = self.playbackController
-    weak var weakDelegate = self.delegate
+    weak let weakDelegate = self.delegate
     
     queueObservationTask = Task.detached {
       let queueStream = AsyncStream<Void> { continuation in
@@ -179,7 +179,7 @@ final class PlaybackObserver {
     // Capture dependencies outside the task to avoid capturing self
     let playbackController = self.playbackController
     let timeUpdateInterval = self.timeUpdateInterval
-    weak var weakDelegate = self.delegate
+    weak let weakDelegate = self.delegate
 
     timeUpdateTask = Task.detached {
       while !Task.isCancelled {
