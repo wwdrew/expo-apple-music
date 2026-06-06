@@ -46,8 +46,8 @@ android/keystores/debug.keystore
 #
 example/ios/Pods
 
-# Ruby
-example/vendor/
+# Ruby (Bundler)
+example/vendor/bundle/
 
 # node.js
 #

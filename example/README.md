@@ -21,7 +21,8 @@ Without `EXPO_PUBLIC_APPLE_MUSIC_DEVELOPER_TOKEN`, iOS `Catalog.search` uses nat
 
 ## Android
 
-Set the same env var; Android **requires** it. See [docs/CLI.md](../docs/CLI.md).
+1. Download Apple's MusicKit Android SDK and place both `.aar` files in `vendor/apple-musickit-android/` (see [vendor/apple-musickit-android/README.md](./vendor/apple-musickit-android/README.md)).
+2. Set the same env var; Android **requires** it. See [docs/CLI.md](../docs/CLI.md).
 
 ```sh
 yarn dev-token -- --write-env example/.env.local

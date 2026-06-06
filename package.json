@@ -48,7 +48,6 @@
     "ios",
     "android/build.gradle",
     "android/src/main",
-    "android/libs",
     "LICENSE",
     "NOTICE",
     "ATTRIBUTION.md"

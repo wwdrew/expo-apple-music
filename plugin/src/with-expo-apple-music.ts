@@ -1,9 +1,19 @@
+import path from "path";
+
 import {
   type ConfigPlugin,
   IOSConfig,
+  withDangerousMod,
   withInfoPlist,
   withXcodeProject,
 } from "@expo/config-plugins";
+
+import { copyAndroidMusicKitAars } from "./apple-music-aars";
+
+/** plugin/build/*.js → package root */
+function getExpoAppleMusicModuleRoot(): string {
+  return path.join(__dirname, "..", "..");
+}
 
 /** MusicKit APIs used by this module require iOS 16.4+ (Expo SDK 56 minimum). */
 const IOS_DEPLOYMENT_TARGET = "16.4";
@@ -52,16 +62,52 @@ export type ExpoAppleMusicPluginProps = {
    * Sets `NSAppleMusicUsageDescription` in the generated iOS Info.plist.
    */
   musicUsageDescription?: string;
+  /**
+   * Directory containing Apple's MusicKit Android `.aar` files (path relative to
+   * the app project root). Required when running `expo prebuild` for Android.
+   *
+   * The plugin copies the AARs into this package at prebuild time — they are not
+   * shipped on npm and cannot be redistributed by this library.
+   */
+  androidMusicKitAarDir?: string;
+};
+
+const withAndroidMusicKitAars: ConfigPlugin<
+  Pick<ExpoAppleMusicPluginProps, "androidMusicKitAarDir">
+> = (config, { androidMusicKitAarDir } = {}) => {
+  return withDangerousMod(config, [
+    "android",
+    async (config) => {
+      const configuredDir = androidMusicKitAarDir?.trim();
+      if (!configuredDir) {
+        throw new Error(
+          "[expo-apple-music] `androidMusicKitAarDir` is required for Android builds. " +
+            "Download Apple's MusicKit SDK for Android, place the .aar files in a directory " +
+            "in your app (for example `./vendor/apple-musickit-android`), and pass that path " +
+            "to the expo-apple-music config plugin. See docs/GETTING_STARTED.md.",
+        );
+      }
+
+      const projectRoot = config.modRequest.projectRoot;
+      const sourceDir = path.resolve(projectRoot, configuredDir);
+      const moduleRoot = getExpoAppleMusicModuleRoot();
+
+      copyAndroidMusicKitAars({ sourceDir, moduleRoot });
+
+      return config;
+    },
+  ]);
 };
 
 const withExpoAppleMusic: ConfigPlugin<ExpoAppleMusicPluginProps | void> = (
   config,
   props,
 ) => {
-  const { musicUsageDescription } = props ?? {};
+  const { musicUsageDescription, androidMusicKitAarDir } = props ?? {};
 
   config = withIosDeploymentTargetPodfile(config);
   config = withIosDeploymentTargetXcodeProject(config);
+  config = withAndroidMusicKitAars(config, { androidMusicKitAarDir });
 
   return withInfoPlist(config, (c) => {
     const current = c.modResults.NSAppleMusicUsageDescription;

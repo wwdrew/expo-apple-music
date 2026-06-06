@@ -39,3 +39,6 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Apple MusicKit Android SDK (download from Apple; see vendor/apple-musickit-android/README.md)
+vendor/**/*.aar

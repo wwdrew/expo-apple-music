@@ -17,7 +17,11 @@ import expoAppleMusic from '@wwdrew/expo-apple-music/plugin';
 
 const config: ExpoConfig = {
   plugins: [
-    expoAppleMusic({ musicUsageDescription: 'We use Apple Music in this app.' }),
+    expoAppleMusic({
+      musicUsageDescription: 'We use Apple Music in this app.',
+      // Required for Android prebuild — your app stores Apple's .aar files (not shipped on npm)
+      androidMusicKitAarDir: './vendor/apple-musickit-android',
+    }),
   ],
 };
 
@@ -29,6 +33,21 @@ The plugin sets **iOS deployment target 16.4** (MusicKit + Expo SDK 56 minimum).
 Then `npx expo prebuild` when you change native config.
 
 **Apple Developer:** enable **MusicKit** on your App ID (App Services). Do **not** add MusicKit keys to entitlements — see **[IOS_SETUP.md](./IOS_SETUP.md)**.
+
+### Android MusicKit SDK (app-owned)
+
+Apple's MusicKit Android libraries (`.aar` files) require an Apple Developer account to download and **cannot** be redistributed in this npm package.
+
+1. Download the **MusicKit SDK for Android** from [MusicKit on Apple Developer](https://developer.apple.com/musickit/).
+2. Place both `.aar` files in a directory in your app repo (for example `./vendor/apple-musickit-android/`). Add `*.aar` to `.gitignore` if you do not commit them.
+3. Set `androidMusicKitAarDir` to that path (see config above).
+
+On Android prebuild, the plugin copies the AARs into the linked module. **Android builds fail** if the directory is missing or either file is absent. Filenames must match the SDK version this package expects:
+
+| File | Role |
+| ---- | ---- |
+| `musickitauth-release-1.1.2.aar` | Authentication |
+| `mediaplayback-release-1.1.1.aar` | Playback |
 
 ## 3. Developer JWT
 
@@ -85,6 +104,7 @@ Details: **[IOS_SETUP.md](./IOS_SETUP.md)**
 
 ### Android
 
+- MusicKit Android `.aar` files in `androidMusicKitAarDir` (see §2)
 - Physical **ARM** device
 - **Apple Music** app installed (`com.apple.android.music`)
 - Active subscription
@@ -100,13 +120,13 @@ Details: **[IOS_SETUP.md](./IOS_SETUP.md)**
 
 This repository includes a full explorer (not published to npm).
 
-**From a git clone:** download Apple’s Android MusicKit `.aar` files into `android/libs/` before building Android — see **[BUILDING_LOCALLY.md](./BUILDING_LOCALLY.md)**.
+**From a git clone:** download Apple’s Android MusicKit `.aar` files into `example/vendor/apple-musickit-android/` before Android prebuild — see **[BUILDING_LOCALLY.md](./BUILDING_LOCALLY.md)**.
 
 ```sh
 git clone https://github.com/wwdrew/expo-apple-music.git
 cd expo-apple-music
 yarn install
-# android/libs/*.aar — see BUILDING_LOCALLY.md
+# example/vendor/apple-musickit-android/*.aar — see BUILDING_LOCALLY.md
 yarn dev-token -- --write-env example/.env.local
 cd example && npx expo start
 ```

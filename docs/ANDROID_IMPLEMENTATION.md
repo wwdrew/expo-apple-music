@@ -64,7 +64,7 @@ Everything below must work on Android (parity with `ios/ExpoAppleMusicModule.swi
 ## Prerequisites (already done)
 
 - Auth AAR + playback AAR linked (`expo-module.config.json`, `android/build.gradle`)
-- AAR files in `android/libs/` (gitignored; see **[BUILDING_LOCALLY.md](./BUILDING_LOCALLY.md)**)
+- AAR files in app-owned directory (copied at prebuild by config plugin; see **[BUILDING_LOCALLY.md](./BUILDING_LOCALLY.md)**)
 - Developer JWT in `MusicKitAuthStorage` after `authorize()` / `setDeveloperToken()`; music user token returned to JS (app-owned)
 - Manifest `<queries>` for Apple Music app
 

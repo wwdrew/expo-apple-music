@@ -3,6 +3,12 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
+      "@wwdrew/expo-apple-music": [
+        "../build/index"
+      ],
+      "@wwdrew/expo-apple-music/plugin": [
+        "../plugin/build/index"
+      ],
       "expo-apple-music": [
         "../src/index"
       ],

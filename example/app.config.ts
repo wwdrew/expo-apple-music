@@ -14,6 +14,7 @@ const config: ExpoConfig = {
     expoAppleMusic({
       musicUsageDescription:
         "This example app uses Apple Music for testing MusicKit.",
+      androidMusicKitAarDir: "./vendor/apple-musickit-android",
     }),
     buildProperties({
       ios: {

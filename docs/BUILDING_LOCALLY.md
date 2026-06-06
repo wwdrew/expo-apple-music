@@ -16,7 +16,7 @@ yarn install
 
 ## 2. Apple MusicKit Android libraries (required for Android builds)
 
-The native **authentication** and **playback** SDKs are binary `.aar` files from Apple. They are **not committed to git** (see `.gitignore`). You must download them from Apple and place them in the repo before any Android build (module or example app):
+The native **authentication** and **playback** SDKs are binary `.aar` files from Apple. They **cannot** be redistributed in this npm package — your app (or this example app) must obtain them from Apple and point the config plugin at them.
 
 ### Download
 
@@ -26,26 +26,28 @@ The native **authentication** and **playback** SDKs are binary `.aar` files from
 
 The archive contains the authentication and media playback `.aar` libraries (exact layout may vary by SDK version).
 
-### Install into this repo
+### Install for the example app
 
-Copy these two files into **`android/libs/`** at the repository root (create the folder if needed):
+Copy these two files into **`example/vendor/apple-musickit-android/`** (create the folder if needed):
 
 | File | Role |
 | ---- | ---- |
 | `musickitauth-release-1.1.2.aar` | Authentication (Apple Music sign-in) |
 | `mediaplayback-release-1.1.1.aar` | Playback (`MediaPlayerController`) |
 
-Paths must match `expo-module.config.json` — Gradle will not resolve different filenames without updating that config.
+Filenames must match `expo-module.config.json` in this package — Gradle will not resolve different names without updating that config.
 
 Verify:
 
 ```sh
-ls android/libs/*.aar
+ls example/vendor/apple-musickit-android/*.aar
 # mediaplayback-release-1.1.1.aar
 # musickitauth-release-1.1.2.aar
 ```
 
-Without both files, Android builds fail (missing `:musickit-auth` / `:musickit-playback` AAR projects).
+The example [`app.config.ts`](./example/app.config.ts) sets `androidMusicKitAarDir: './vendor/apple-musickit-android'`. On `npx expo prebuild`, the config plugin copies both AARs into the linked module before Gradle runs. Without both files, Android prebuild fails with a clear error.
+
+For your own app, use the same pattern — see **[GETTING_STARTED.md](./GETTING_STARTED.md)**.
 
 ---
 
@@ -87,4 +89,4 @@ From the repo root:
 | `yarn lint` | ESLint |
 | `yarn test` | Jest + Android bridge contract tests |
 
-Before publishing, ensure both `.aar` files are in `android/libs/` per **[RELEASING.md](./RELEASING.md)**.
+Apple `.aar` files are **not** required for `yarn build`, lint, or test — only for Android native builds via the example app prebuild.
