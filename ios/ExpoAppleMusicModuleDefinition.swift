@@ -2,6 +2,7 @@ import ExpoModulesCore
 
 @available(iOS 16.0, *)
 extension ExpoAppleMusicModule {
+  @ModuleDefinitionBuilder
   public func definition() -> ModuleDefinition {
     Name("ExpoAppleMusic")
 
