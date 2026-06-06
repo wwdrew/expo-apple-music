@@ -170,7 +170,7 @@ Full [Apple Music API](https://developer.apple.com/documentation/AppleMusicAPI) 
 - [docs/V1_PLAN.md](./docs/V1_PLAN.md) — v1.0 completion plan
 - [README.md](./README.md) — install and usage
 - [docs/AUTH.md](./docs/AUTH.md) — `authorize()`, developer token, `AuthStatus`, Android auth flow
-- [docs/CLI.md](./docs/CLI.md) — `npm run dev-token` (generate / verify developer JWT)
+- [docs/CLI.md](./docs/CLI.md) — `yarn dev-token` (generate / verify developer JWT)
 - [docs/ANDROID_IMPLEMENTATION.md](./docs/ANDROID_IMPLEMENTATION.md) — Android full iOS parity (REST + playback AAR; agent handoff)
 - [docs/WEB_IMPLEMENTATION.md](./docs/WEB_IMPLEMENTATION.md) — Web parity (MusicKit JS; same REST contract as Android)
 - [ATTRIBUTION.md](./ATTRIBUTION.md) — inspiration and license; no migration guide

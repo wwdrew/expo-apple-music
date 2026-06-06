@@ -33,7 +33,7 @@ Golden files live under `fixtures/`:
 Sync inputs before Android unit tests:
 
 ```sh
-npm run sync:fixtures
+yarn sync:fixtures
 ```
 
 ---
@@ -45,7 +45,7 @@ npm run sync:fixtures
 3. Register in `src/mappers/__tests__/bridge-contract.ts` → `BRIDGE_CONTRACT_CASES`.
 4. Implement in `apple-music-json-mapper.ts` and `AppleMusicJsonMapper.kt` (and `RestJsonMapper.swift` if REST-only).
 5. Mirror assertions in `BridgeContractTest.kt`.
-6. Run `npm run sync:fixtures` and `npm test`.
+6. Run `yarn sync:fixtures` and `yarn test`.
 
 ---
 

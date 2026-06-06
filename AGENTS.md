@@ -8,7 +8,7 @@ For **auth** (`authorize`, developer token, `AuthStatus`, platform requirements)
 
 For **iOS** (portal, signing, entitlements, developer JWT, release checklist), read [docs/IOS_SETUP.md](./docs/IOS_SETUP.md).
 
-For **repo CLI** (`npm run dev-token`, verify JWT), read [docs/CLI.md](./docs/CLI.md).
+For **repo CLI** (`yarn dev-token`, verify JWT), read [docs/CLI.md](./docs/CLI.md).
 
 For **Android (full iOS parity)** implementation, read [docs/ANDROID_IMPLEMENTATION.md](./docs/ANDROID_IMPLEMENTATION.md).
 

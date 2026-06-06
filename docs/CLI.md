@@ -4,7 +4,7 @@ Command-line helpers for **local development** of this package. They are **not**
 
 | Script | Command | Purpose |
 | ------ | ------- | ------- |
-| Developer JWT | `npm run dev-token` | Sign or verify MusicKit **developer** tokens (`Auth.authorize` on every platform) |
+| Developer JWT | `yarn dev-token` | Sign or verify MusicKit **developer** tokens (`Auth.authorize` on every platform) |
 
 Implementation: [`scripts/generate-developer-token.mjs`](../scripts/generate-developer-token.mjs)
 
@@ -51,7 +51,7 @@ Place the `.p8` file at the path above. **Never commit** `.p8` files or long-liv
 Print a JWT to stdout (default lifetime **1 day**):
 
 ```sh
-npm run dev-token
+yarn dev-token
 ```
 
 ### Generate options
@@ -71,10 +71,10 @@ Credentials are read from **flags** or **`.env.music`** in the repo root (loaded
 
 ```sh
 # 1. Mint token into the example env file (no origin claim — any localhost port)
-npm run dev-token -- --write-env example/.env.local
+yarn dev-token -- --write-env example/.env.local
 
 # Web: lock token to Expo’s origin (use the port Metro prints, often 8081)
-npm run dev-token -- --origin http://localhost:8081 --write-env example/.env.local
+yarn dev-token -- --origin http://localhost:8081 --write-env example/.env.local
 
 # 2. Restart Metro so Expo picks up the new env
 cd example && npx expo start --clear
@@ -92,7 +92,7 @@ The example reads `process.env.EXPO_PUBLIC_APPLE_MUSIC_DEVELOPER_TOKEN` and pass
 ### Override credentials without editing `.env.music`
 
 ```sh
-APPLE_MUSIC_TEAM_ID=… APPLE_MUSIC_KEY_ID=… APPLE_MUSIC_PRIVATE_KEY_PATH=./AuthKey.p8 npm run dev-token
+APPLE_MUSIC_TEAM_ID=… APPLE_MUSIC_KEY_ID=… APPLE_MUSIC_PRIVATE_KEY_PATH=./AuthKey.p8 yarn dev-token
 ```
 
 ---
@@ -102,13 +102,13 @@ APPLE_MUSIC_TEAM_ID=… APPLE_MUSIC_KEY_ID=… APPLE_MUSIC_PRIVATE_KEY_PATH=./Au
 `Auth.authorize()` does **not** validate the JWT before opening Apple Music. Use **`--verify`** to check a token against Apple’s API **without a device**:
 
 ```sh
-npm run dev-token -- --verify "<your-jwt>"
+yarn dev-token -- --verify "<your-jwt>"
 ```
 
 Verify token from the example env file:
 
 ```sh
-npm run dev-token -- --verify "$(grep '^EXPO_PUBLIC_APPLE_MUSIC_DEVELOPER_TOKEN=' example/.env.local | cut -d= -f2-)"
+yarn dev-token -- --verify "$(grep '^EXPO_PUBLIC_APPLE_MUSIC_DEVELOPER_TOKEN=' example/.env.local | cut -d= -f2-)"
 ```
 
 ### Verify options
@@ -138,7 +138,7 @@ A successful verify does **not** guarantee `Auth.authorize()` returns `authorize
 ## Help
 
 ```sh
-npm run dev-token -- --help
+yarn dev-token -- --help
 # or
 node scripts/generate-developer-token.mjs --help
 ```
@@ -161,7 +161,7 @@ node scripts/generate-developer-token.mjs --help
 | ------- | ------------- |
 | `Missing credentials` | Create `.env.music` from `.env.music.example` or pass `--team-id`, `--key-id`, `--private-key`. |
 | `Could not read private key` | Check `APPLE_MUSIC_PRIVATE_KEY_PATH` points at your `.p8` file. |
-| Verify HTTP 401 | Regenerate with `npm run dev-token`; confirm Team ID and Key ID match the `.p8` key. If the JWT has an `origin` claim, pass `--origin` matching the claim. |
+| Verify HTTP 401 | Regenerate with `yarn dev-token`; confirm Team ID and Key ID match the `.p8` key. If the JWT has an `origin` claim, pass `--origin` matching the claim. |
 | Web auth popup 403 | Allow popups; match JWT `origin` to the browser URL (scheme + host + port); try a normal browser window. See [AUTH.md](./AUTH.md#web-origin-optional-jwt-claim). |
 | Example Authorize disabled | Set `EXPO_PUBLIC_APPLE_MUSIC_DEVELOPER_TOKEN` in `example/.env.local` and restart Metro. |
 | Authorize opens Apple Music but never `authorized` | Token may still be fine — verify with `--verify`; complete approval in Apple Music with an active subscription. |

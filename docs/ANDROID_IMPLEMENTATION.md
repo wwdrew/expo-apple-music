@@ -188,7 +188,7 @@ Pagination: honor `limit` / `offset` from JS options (defaults like iOS: 25 / 0)
 
 - Physical **ARM** device (playback AAR has no x86 natives)
 - Apple Music installed, user subscribed and signed in
-- `npm run dev-token` → `example/.env.local`
+- `yarn dev-token` → `example/.env.local`
 
 ---
 

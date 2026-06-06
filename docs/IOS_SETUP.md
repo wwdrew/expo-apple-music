@@ -94,7 +94,7 @@ From the **package repo root**:
 cp .env.music.example .env.music
 # Edit .env.music: TEAM_ID, KEY_ID, path to AuthKey_*.p8
 
-npm run dev-token -- --write-env example/.env.local
+yarn dev-token -- --write-env example/.env.local
 cd example && npx expo start --clear
 # separate terminal:
 cd example && npx expo run:ios
@@ -145,5 +145,5 @@ For **this npm package**, use [QA_SIGNOFF.md](./QA_SIGNOFF.md) (iOS section). Th
 ## Related
 
 - [AUTH.md](./AUTH.md) — `authorize`, `AuthStatus`, iOS troubleshooting summary
-- [CLI.md](./CLI.md) — `npm run dev-token`
+- [CLI.md](./CLI.md) — `yarn dev-token`
 - [PLATFORM_IMPLEMENTATION.md](./PLATFORM_IMPLEMENTATION.md) — native vs REST per method

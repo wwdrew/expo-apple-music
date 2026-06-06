@@ -4,7 +4,7 @@ Use this before tagging **`1.0.0`** on npm. For scope and deferred items, see [V
 
 **Current version:** `1.0.0` (`package.json`)
 
-**Last automated audit:** 2026-05-21 — `npm test` (14 suites, 58 tests), `npm run build`, and `npm run pack:check` green; CI in `.github/workflows/ci.yml`.
+**Last automated audit:** 2026-05-21 — `yarn test` (14 suites, 58 tests), `yarn build`, and `yarn pack:check` green; CI in `.github/workflows/ci.yml`.
 
 **Blocking publish:** complete [QA_SIGNOFF.md](./QA_SIGNOFF.md) on iOS, Android, and web, then `npm publish` + git tag (§7).
 
@@ -36,7 +36,7 @@ From [V1_PLAN.md §9](./V1_PLAN.md#9-v10-release-criteria):
 
 - [x] `"web"` in `expo-module.config.json`; Metro resolves web module (`src/native-module.web.ts`)
 - [x] No bridge method throws `UNSUPPORTED_PLATFORM` except documented ❌ (grep: only constants in `native-module*.ts`)
-- [x] Bridge payloads match `src/types/*` — fixture tests (`npm test` → `bridge-contract.test.ts`); browser spot-check in [QA_SIGNOFF.md](./QA_SIGNOFF.md)
+- [x] Bridge payloads match `src/types/*` — fixture tests (`yarn test` → `bridge-contract.test.ts`); browser spot-check in [QA_SIGNOFF.md](./QA_SIGNOFF.md)
 - [x] Data calls via MusicKit JS (not raw unauthenticated `fetch` to `api.music.apple.com`) (`WebAppleMusicRestTransport`)
 - [ ] Playback + hooks: Safari + Chrome, 30s+ session (seek, skip, leave player running) — [QA_SIGNOFF.md](./QA_SIGNOFF.md)
 - [x] **README:** platform parity table includes **Web** column
@@ -70,9 +70,9 @@ From [V1_PLAN.md §9](./V1_PLAN.md#9-v10-release-criteria):
 
 ## 5. Tests & CI
 
-- [x] `npm test` passes locally (2026-05-20: 10 suites, 36 tests)
-- [x] `npm run build` succeeds (`build/` artifacts for publish) (2026-05-20)
-- [x] Mapper fixtures aligned (`npm run sync:fixtures`)
+- [x] `yarn test` passes locally (2026-05-20: 10 suites, 36 tests)
+- [x] `yarn build` succeeds (`build/` artifacts for publish) (2026-05-20)
+- [x] Mapper fixtures aligned (`yarn sync:fixtures`)
 - [x] GitHub Actions: lint + test on PR (`.github/workflows/ci.yml`)
 
 ---
@@ -95,7 +95,7 @@ Use [QA_SIGNOFF.md](./QA_SIGNOFF.md) (consolidated checklist).
 
 - [x] [CHANGELOG.md](../CHANGELOG.md) — 1.0.0 section filled
 - [x] Version bump in `package.json` (`1.0.0`)
-- [ ] `npm run pack:check` then `npm publish` (tarball excludes `example/`, `docs/`, `src/`, `android/build/` — see [RELEASING.md](./RELEASING.md))
+- [ ] `yarn pack:check` then `npm publish` (tarball excludes `example/`, `docs/`, `src/`, `android/build/` — see [RELEASING.md](./RELEASING.md))
 - [ ] Git tag `v1.0.0` pushed
 - [ ] GitHub release notes (if using GitHub)
 
@@ -110,9 +110,9 @@ Skipped — shipping **1.0.0** after [QA_SIGNOFF.md](./QA_SIGNOFF.md).
 ## Quick commands
 
 ```sh
-npm test
-npm run build
-npm run pack:check
+yarn test
+yarn build
+yarn pack:check
 cd example && npx expo start --ios    # device
 cd example && npx expo start --android
 cd example && npx expo start --web

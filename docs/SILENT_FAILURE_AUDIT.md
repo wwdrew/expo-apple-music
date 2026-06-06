@@ -30,6 +30,6 @@ On each platform, force a failure (revoke auth, bad JWT, airplane mode) and conf
 ## Related
 
 - [ERROR_CODES.md](./ERROR_CODES.md) — stable `code` strings for bridge rejections
-- [BRIDGE_CONTRACT.md](./BRIDGE_CONTRACT.md) — fixture parity tests (`npm test`)
+- [BRIDGE_CONTRACT.md](./BRIDGE_CONTRACT.md) — fixture parity tests (`yarn test`)
 - `getErrorMessage()` — format errors in app UI (never `String(error)` on bridge rejections — yields `[object Object]`)
 - `callNative` throws `Error` with `code` / `operation` attached via `asThrownAppleMusicError`

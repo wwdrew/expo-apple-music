@@ -8,7 +8,7 @@ Dev playground for [`@wwdrew/expo-apple-music`](../README.md).
 2. **Developer JWT:** From the **repo root** (not `example/`):
    ```sh
    cp ../.env.music.example ../.env.music   # add Team ID, Key ID, .p8 path
-   npm run dev-token -- --write-env example/.env.local
+   yarn dev-token -- --write-env example/.env.local
    ```
 3. **Run** (after plugin or SDK changes, run `npx expo prebuild` first):
    ```sh
@@ -24,7 +24,7 @@ Without `EXPO_PUBLIC_APPLE_MUSIC_DEVELOPER_TOKEN`, iOS `Catalog.search` uses nat
 Set the same env var; Android **requires** it. See [docs/CLI.md](../docs/CLI.md).
 
 ```sh
-npm run dev-token -- --write-env example/.env.local
+yarn dev-token -- --write-env example/.env.local
 cd example && npx expo prebuild && npx expo start --clear && npx expo run:android
 ```
 
@@ -33,12 +33,12 @@ cd example && npx expo prebuild && npx expo start --clear && npx expo run:androi
 There is **no** “add domain” page in the Apple Developer portal for MusicKit web. Configure:
 
 1. **App ID** — [Identifiers](https://developer.apple.com/account/resources) → `com.wwdrew.applemusic.example` → **App Services** → **MusicKit** ✓
-2. **Developer JWT** — same `npm run dev-token` flow as Android ([docs/CLI.md](../docs/CLI.md))
+2. **Developer JWT** — same `yarn dev-token` flow as Android ([docs/CLI.md](../docs/CLI.md))
 3. **Optional origin lock** — only if you add an `origin` claim to the JWT (recommended for production, optional for local dev):
 
    ```sh
    # Use the exact URL Expo prints (port may differ)
-   npm run dev-token -- --origin http://localhost:8081 --write-env example/.env.local
+   yarn dev-token -- --origin http://localhost:8081 --write-env example/.env.local
    ```
 
 4. **Run:**
@@ -55,4 +55,4 @@ If auth fails with 403 after the popup, see [docs/AUTH.md](../docs/AUTH.md#web-o
 
 - [docs/IOS_SETUP.md](../docs/IOS_SETUP.md) — full iOS signing and release checklist  
 - [docs/AUTH.md](../docs/AUTH.md) — auth behavior (incl. web / localhost)  
-- [docs/CLI.md](../docs/CLI.md) — `npm run dev-token`
+- [docs/CLI.md](../docs/CLI.md) — `yarn dev-token`

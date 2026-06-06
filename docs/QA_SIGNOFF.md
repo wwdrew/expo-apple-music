@@ -1,6 +1,6 @@
 # Manual QA sign-off (1.0.0)
 
-One session per platform. Use the **example** app (`cd example && npx expo start`). Developer JWT in `example/.env.local` (`npm run dev-token -- --write-env example/.env.local`).
+One session per platform. Use the **example** app (`cd example && npx expo start`). Developer JWT in `example/.env.local` (`yarn dev-token -- --write-env example/.env.local`).
 
 Check each box, note device/browser + date, then tag `v1.0.0`.
 
@@ -52,7 +52,7 @@ Check each box, note device/browser + date, then tag `v1.0.0`.
 ## Publish (after all three signed)
 
 ```sh
-npm test && npm run pack:check
+yarn test && yarn pack:check
 npm publish --access public
 git tag v1.0.0 && git push origin v1.0.0
 ```

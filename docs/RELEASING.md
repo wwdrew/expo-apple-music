@@ -5,7 +5,7 @@ Automated releases use **[release-please](https://github.com/googleapis/release-
 ## Before enabling automation
 
 1. Complete **[QA_SIGNOFF.md](./QA_SIGNOFF.md)** on iOS, Android, and web.
-2. Run **`npm run pack:check`** — confirms the npm tarball has no `example/`, `docs/`, `src/`, or `android/build/`.
+2. Run **`yarn pack:check`** — confirms the npm tarball has no `example/`, `docs/`, `src/`, or `android/build/`.
 3. Add **`NPM_TOKEN`** to GitHub repository secrets (npm automation token with publish access).
 
 ## Enable release-please
@@ -29,8 +29,8 @@ Config: [`release-please-config.json`](../release-please-config.json) (node rele
 ## Manual publish (one-off)
 
 ```sh
-npm test
-npm run pack:check
+yarn test
+yarn pack:check
 npm publish --access public
 git tag v1.0.0 && git push origin v1.0.0
 ```

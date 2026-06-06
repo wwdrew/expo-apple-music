@@ -38,7 +38,7 @@ Then `npx expo prebuild` when you change native config.
 | **Web** | Required |
 | **iOS** | Optional for authorize; recommended for reliable `Catalog.search` |
 
-Your app must **sign and serve** the JWT (backend, Remote Config, etc.). This package does not ship keys. Local dev: clone this repo and run **`npm run dev-token`** — **[CLI.md](./CLI.md)**.
+Your app must **sign and serve** the JWT (backend, Remote Config, etc.). This package does not ship keys. Local dev: clone this repo and run **`yarn dev-token`** — **[CLI.md](./CLI.md)**.
 
 ## 4. Authorize and play
 
@@ -105,8 +105,9 @@ This repository includes a full explorer (not published to npm).
 ```sh
 git clone https://github.com/wwdrew/expo-apple-music.git
 cd expo-apple-music
+yarn install
 # android/libs/*.aar — see BUILDING_LOCALLY.md
-npm run dev-token -- --write-env example/.env.local
+yarn dev-token -- --write-env example/.env.local
 cd example && npx expo start
 ```
 

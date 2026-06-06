@@ -92,13 +92,13 @@ When present, Apple rejects requests whose `Origin` header does not match a list
 
 | Token | Behavior |
 | ----- | -------- |
-| **No `origin` claim** (default from `npm run dev-token`) | Works from any origin — simplest for local dev |
+| **No `origin` claim** (default from `yarn dev-token`) | Works from any origin — simplest for local dev |
 | **With `origin` claim** | Must match the exact URL in the browser (e.g. `http://localhost:8081`, not `8080`) |
 
 Mint a localhost token with the repo CLI:
 
 ```sh
-npm run dev-token -- --origin http://localhost:8081 --write-env example/.env.local
+yarn dev-token -- --origin http://localhost:8081 --write-env example/.env.local
 ```
 
 **Local dev checklist:** use the exact origin Expo prints, allow popups, use a normal (non-private) browser window, and ensure the account has an Apple Music subscription. If auth still fails on localhost, see [CLI.md](./CLI.md) (tunnel fallback).
@@ -186,8 +186,8 @@ Quick start:
 
 ```sh
 cp .env.music.example .env.music   # add Team ID, Key ID, .p8 path
-npm run dev-token -- --write-env example/.env.local
-npm run dev-token -- --verify "$(grep EXPO_PUBLIC example/.env.local | cut -d= -f2-)"
+yarn dev-token -- --write-env example/.env.local
+yarn dev-token -- --verify "$(grep EXPO_PUBLIC example/.env.local | cut -d= -f2-)"
 ```
 
 `Auth.authorize()` does **not** validate the developer JWT before opening Apple Music — use the CLI `--verify` flag or complete the in-app flow and check for `authorized`.

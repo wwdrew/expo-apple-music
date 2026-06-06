@@ -9,7 +9,7 @@ Steps to run this repository from a **git clone** (example app, native Android w
 ```sh
 git clone https://github.com/wwdrew/expo-apple-music.git
 cd expo-apple-music
-npm install
+yarn install
 ```
 
 ---
@@ -54,7 +54,7 @@ Without both files, Android builds fail (missing `:musickit-auth` / `:musickit-p
 The example app needs a MusicKit **developer JWT** for Android and web:
 
 ```sh
-npm run dev-token -- --write-env example/.env.local
+yarn dev-token -- --write-env example/.env.local
 ```
 
 See **[CLI.md](./CLI.md)** (`.p8` key, Team ID, Key ID). Do not commit `.env.local` or `.p8` files.
@@ -65,7 +65,7 @@ See **[CLI.md](./CLI.md)** (`.p8` key, Team ID, Key ID). Do not commit `.env.loc
 
 ```sh
 cd example
-npm install
+yarn install
 npx expo prebuild   # after plugin, SDK upgrade, or native changes (regenerates ios/android)
 npx expo run:android   # physical ARM device; Apple Music app installed
 # or: npx expo start
@@ -83,8 +83,8 @@ From the repo root:
 
 | Command | Purpose |
 | ------- | ------- |
-| `npm run build` | Compile TypeScript (`build/`) |
-| `npm run lint` | ESLint |
-| `npm test` | Jest + Android bridge contract tests |
+| `yarn build` | Compile TypeScript (`build/`) |
+| `yarn lint` | ESLint |
+| `yarn test` | Jest + Android bridge contract tests |
 
 Before publishing, ensure both `.aar` files are in `android/libs/` per **[RELEASING.md](./RELEASING.md)**.

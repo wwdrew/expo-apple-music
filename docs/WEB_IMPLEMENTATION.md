@@ -164,7 +164,7 @@ Legend: ✅ supported · ⚠️ supported with differences · ❌ not supported 
 | **Browser playback variance** | Some tracks/storefronts behave differently in Chrome vs Safari (Apple/community reports) — test real catalog IDs |
 | **No “is Apple Music installed?”** | N/A on web; user signs in via web auth UI |
 | **Developer token in client** | JWT must be short-lived and minted server-side in production |
-| **Private key in Expo app** | ❌ Never — use backend or `npm run dev-token` for example only |
+| **Private key in Expo app** | ❌ Never — use backend or `yarn dev-token` for example only |
 | **Exact iOS permission dialog** | Web uses MusicKit authorize UI, not `NSAppleMusicUsageDescription` |
 | **Android upsell screen options** | `hideStartScreen` / `startScreenMessage` not applicable |
 
@@ -306,7 +306,7 @@ Update `example/App.tsx` for three platforms:
 
 - iOS: `Auth.authorize()` (no token)
 - Android: `Auth.authorize(EXPO_PUBLIC_APPLE_MUSIC_DEVELOPER_TOKEN)`
-- Web: same env token as Android; run `npm run web`
+- Web: same env token as Android; run `cd example && yarn web`
 
 Use [docs/CLI.md](./CLI.md) for `example/.env.local`.
 
@@ -344,7 +344,7 @@ Use [docs/CLI.md](./CLI.md) for `example/.env.local`.
 - [x] No public bridge method throws `UNSUPPORTED_PLATFORM` on web (except documented ❌ cases: library `station`, etc.)
 - [x] All responses match existing TypeScript interfaces in `src/types/` — fixture tests (`bridge-contract.test.ts`); browser spot-check in [QA_SIGNOFF.md](./QA_SIGNOFF.md)
 - [x] Data calls go through MusicKit JS (not raw unauthenticated `fetch` to Apple API) — `WebAppleMusicRestTransport`
-- [x] Mapper parity vs iOS/Android field names — shared `fixtures/` + `npm test`; browser spot-check in [QA_SIGNOFF.md](./QA_SIGNOFF.md)
+- [x] Mapper parity vs iOS/Android field names — shared `fixtures/` + `yarn test`; browser spot-check in [QA_SIGNOFF.md](./QA_SIGNOFF.md)
 - [ ] Playback + hooks work in Safari and Chrome with subscribed account (30s+ session) — [QA_SIGNOFF.md](./QA_SIGNOFF.md)
 - [ ] Example app runs `expo start --web` with shared UI — [QA_SIGNOFF.md](./QA_SIGNOFF.md)
 - [x] README platform parity table includes web column

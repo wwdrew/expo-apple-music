@@ -37,7 +37,7 @@ if (status === AuthStatus.AUTHORIZED && musicUserToken) {
 }
 ```
 
-**Developer JWT:** your app signs and serves it — not included in this package. Local dev: clone the repo and use `npm run dev-token` ([docs/CLI.md](./docs/CLI.md)).
+**Developer JWT:** your app signs and serves it — not included in this package. Local dev: clone the repo and use `yarn dev-token` ([docs/CLI.md](./docs/CLI.md)).
 
 ## Documentation
 
@@ -72,7 +72,7 @@ The **example app** and Android native builds need Apple’s MusicKit Android `.
 
 ```sh
 # After placing mediaplayback-release-1.1.1.aar and musickitauth-release-1.1.2.aar in android/libs/
-npm run dev-token -- --write-env example/.env.local
+yarn dev-token -- --write-env example/.env.local
 cd example && npx expo start
 ```
 
