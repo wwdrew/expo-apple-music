@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 /**
- * Run `npm pack` and fail if the tarball contains paths we never ship.
+ * Run `npm pack` and fail if the tarball is missing required publish artifacts
+ * or includes paths we never ship.
  */
 import { execSync } from 'node:child_process';
-import { readFileSync, unlinkSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -13,6 +15,7 @@ const tgzName = `${pkg.name.replace('@', '').replace('/', '-')}-${pkg.version}.t
 const tgzPath = join(root, tgzName);
 
 const required = [
+  'package/build/index.js',
   'package/plugin/build/index.js',
   'package/plugin/build/index.d.ts',
   'package/plugin/build/with-expo-apple-music.js',
@@ -33,6 +36,39 @@ const forbidden = [
   /^package\/__tests__\//,
   /^package\/\.github\//,
 ];
+
+function verifyPackedExports() {
+  const extractDir = mkdtempSync(join(tmpdir(), 'expo-apple-music-pack-'));
+  try {
+    execSync(`tar -xzf ${JSON.stringify(tgzPath)} -C ${JSON.stringify(extractDir)}`, {
+      stdio: 'pipe',
+    });
+    const packedRoot = join(extractDir, 'package');
+    const checkScript = join(extractDir, 'check-exports.cjs');
+    writeFileSync(
+      checkScript,
+      `
+const assert = require('node:assert/strict');
+const { createRequire } = require('node:module');
+const requireFromPacked = createRequire(${JSON.stringify(join(packedRoot, 'package.json'))});
+
+const pluginEntry = requireFromPacked.resolve('@wwdrew/expo-apple-music/plugin');
+assert.match(pluginEntry, /plugin[\\\\/]build[\\\\/]index\\.js$/);
+
+const appPluginEntry = requireFromPacked.resolve('@wwdrew/expo-apple-music/app.plugin.js');
+assert.match(appPluginEntry, /app\\.plugin\\.js$/);
+
+const pkg = requireFromPacked('@wwdrew/expo-apple-music/package.json');
+assert.equal(pkg.expo?.plugin, './app.plugin.js');
+assert.equal(pkg.exports['./plugin'].default, './plugin/build/index.js');
+assert.equal(pkg.exports['./app.plugin.js'], './app.plugin.js');
+`,
+    );
+    execSync(`node ${JSON.stringify(checkScript)}`, { stdio: 'pipe' });
+  } finally {
+    rmSync(extractDir, { recursive: true, force: true });
+  }
+}
 
 try {
   execSync('npm pack --silent', { cwd: root, stdio: 'pipe' });
@@ -60,6 +96,7 @@ try {
     }
     process.exit(1);
   }
+  verifyPackedExports();
   const sizeMb = (readFileSync(tgzPath).length / (1024 * 1024)).toFixed(2);
   console.log(`OK: ${paths.length} paths, ${sizeMb} MB — ${tgzName}`);
 } finally {

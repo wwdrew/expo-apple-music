@@ -11,7 +11,7 @@
     "test": "jest --watchman=false",
     "test:expo": "expo-module test",
     "prepare": "expo-module prepare",
-    "prepublishOnly": "node scripts/npm-prepublish.mjs && expo-module prepublishOnly && expo-module build plugin",
+    "prepublishOnly": "npm run build && node scripts/npm-prepublish.mjs && expo-module prepublishOnly",
     "pack:check": "npm run build && node scripts/verify-npm-pack.mjs",
     "expo-module": "expo-module",
     "dev-token": "node scripts/generate-developer-token.mjs",
@@ -76,7 +76,9 @@
     "./plugin": {
       "types": "./plugin/build/index.d.ts",
       "default": "./plugin/build/index.js"
-    }
+    },
+    "./app.plugin.js": "./app.plugin.js",
+    "./package.json": "./package.json"
   },
   "peerDependencies": {
     "@expo/config-plugins": ">=9.0.0",
