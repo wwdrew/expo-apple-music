@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/wwdrew/expo-apple-music/compare/v1.1.1...v1.1.2) (2026-06-08)
+
+
+### Bug Fixes
+
+* **release:** export app.plugin.js and harden publish pipeline ([#20](https://github.com/wwdrew/expo-apple-music/issues/20)) ([cebafe2](https://github.com/wwdrew/expo-apple-music/commit/cebafe241caf2b5cfcf457323024aa280a6c2aff))
+
 ## [1.1.1](https://github.com/wwdrew/expo-apple-music/compare/v1.1.0...v1.1.1) (2026-06-08)
 
 

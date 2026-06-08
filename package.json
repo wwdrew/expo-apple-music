@@ -1,6 +1,6 @@
 {
   "name": "@wwdrew/expo-apple-music",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Apple MusicKit wrapper for Expo",
   "main": "build/index.js",
   "types": "build/index.d.ts",
