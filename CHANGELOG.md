@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.1](https://github.com/wwdrew/expo-apple-music/compare/v1.1.0...v1.1.1) (2026-06-08)
+
+
+### Bug Fixes
+
+* **ci:** add workflow_dispatch to republish existing release tags ([1c59ed6](https://github.com/wwdrew/expo-apple-music/commit/1c59ed625da0b0cd89e34551399b5f698a9f2dce))
+* **ci:** grant id-token write for npm provenance publish ([#15](https://github.com/wwdrew/expo-apple-music/issues/15)) ([d19c2cc](https://github.com/wwdrew/expo-apple-music/commit/d19c2cc65719be76f293ae5a3446ad26353ae81d))
+* **release:** ship config plugin build output in npm tarball ([#18](https://github.com/wwdrew/expo-apple-music/issues/18)) ([85ae30c](https://github.com/wwdrew/expo-apple-music/commit/85ae30cd7b6ec6df8cc362bfcec5bc86d46c7fd4))
+
 ## [1.1.0](https://github.com/wwdrew/expo-apple-music/compare/v1.0.0...v1.1.0) (2026-06-06)
 
 
