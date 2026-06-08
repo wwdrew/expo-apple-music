@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.3](https://github.com/wwdrew/expo-apple-music/compare/v1.1.2...v1.1.3) (2026-06-08)
+
+
+### Bug Fixes
+
+* **android:** make manifest merge resilient to musickit allowBackup conflict ([#24](https://github.com/wwdrew/expo-apple-music/issues/24)) ([99987f0](https://github.com/wwdrew/expo-apple-music/commit/99987f010d81804794e2b3e8d604c643e51a757a))
+* **deps:** align peerDependencies with expo-spotify-sdk ([#22](https://github.com/wwdrew/expo-apple-music/issues/22)) ([9aebe2c](https://github.com/wwdrew/expo-apple-music/commit/9aebe2c779cc71f5eaef833e0c4d07d5c378ac4b))
+
 ## [1.1.2](https://github.com/wwdrew/expo-apple-music/compare/v1.1.1...v1.1.2) (2026-06-08)
 
 
