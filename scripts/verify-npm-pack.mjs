@@ -12,6 +12,13 @@ const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
 const tgzName = `${pkg.name.replace('@', '').replace('/', '-')}-${pkg.version}.tgz`;
 const tgzPath = join(root, tgzName);
 
+const required = [
+  'package/plugin/build/index.js',
+  'package/plugin/build/index.d.ts',
+  'package/plugin/build/with-expo-apple-music.js',
+  'package/app.plugin.js',
+];
+
 const forbidden = [
   /^package\/example\//,
   /^package\/docs\//,
@@ -34,6 +41,14 @@ try {
     encoding: 'utf8',
   });
   const paths = listing.trim().split('\n').filter(Boolean);
+  const missing = required.filter((p) => !paths.includes(p));
+  if (missing.length > 0) {
+    console.error('npm pack tarball is missing required paths:\n');
+    for (const p of missing) {
+      console.error(`  ${p}`);
+    }
+    process.exit(1);
+  }
   const bad = paths.filter((p) => forbidden.some((re) => re.test(p)));
   if (bad.length > 0) {
     console.error('npm pack tarball includes forbidden paths:\n');

@@ -41,6 +41,9 @@ jobs:
       - run: yarn install --frozen-lockfile
         if: ${{ steps.release.outputs.release_created }}
 
+      - run: yarn pack:check
+        if: ${{ steps.release.outputs.release_created }}
+
       - run: npm publish --provenance --access public
         if: ${{ steps.release.outputs.release_created }}
         env:
@@ -61,6 +64,8 @@ jobs:
           cache: yarn
 
       - run: yarn install --frozen-lockfile
+
+      - run: yarn pack:check
 
       - run: npm publish --provenance --access public
         env:

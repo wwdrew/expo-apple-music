@@ -11,7 +11,7 @@
     "test": "jest --watchman=false",
     "test:expo": "expo-module test",
     "prepare": "expo-module prepare",
-    "prepublishOnly": "node scripts/npm-prepublish.mjs && expo-module prepublishOnly",
+    "prepublishOnly": "node scripts/npm-prepublish.mjs && expo-module prepublishOnly && expo-module build plugin",
     "pack:check": "npm run build && node scripts/verify-npm-pack.mjs",
     "expo-module": "expo-module",
     "dev-token": "node scripts/generate-developer-token.mjs",
