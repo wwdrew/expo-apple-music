@@ -3,6 +3,7 @@ import path from "path";
 import {
   type ConfigPlugin,
   IOSConfig,
+  withAndroidManifest,
   withDangerousMod,
   withInfoPlist,
   withXcodeProject,
@@ -72,6 +73,39 @@ export type ExpoAppleMusicPluginProps = {
   androidMusicKitAarDir?: string;
 };
 
+const ALLOW_BACKUP_REPLACE_KEY = "android:allowBackup";
+
+/** musickitauth AAR sets allowBackup=true; host apps may differ — merge via tools:replace. */
+const withAndroidAllowBackupToolsReplace: ConfigPlugin = (config) => {
+  return withAndroidManifest(config, (c) => {
+    const mainApplication = c.modResults?.manifest?.application?.[0];
+    if (!mainApplication?.$) {
+      return c;
+    }
+
+    const existing = mainApplication.$["tools:replace"];
+    if (!existing) {
+      mainApplication.$["tools:replace"] = ALLOW_BACKUP_REPLACE_KEY;
+      return c;
+    }
+
+    const keys = [
+      ...new Set(
+        existing
+          .split(",")
+          .map((key) => key.trim())
+          .filter(Boolean),
+      ),
+    ];
+    if (!keys.includes(ALLOW_BACKUP_REPLACE_KEY)) {
+      keys.push(ALLOW_BACKUP_REPLACE_KEY);
+    }
+    mainApplication.$["tools:replace"] = keys.join(",");
+
+    return c;
+  });
+};
+
 const withAndroidMusicKitAars: ConfigPlugin<
   Pick<ExpoAppleMusicPluginProps, "androidMusicKitAarDir">
 > = (config, { androidMusicKitAarDir } = {}) => {
@@ -108,6 +142,7 @@ const withExpoAppleMusic: ConfigPlugin<ExpoAppleMusicPluginProps | void> = (
   config = withIosDeploymentTargetPodfile(config);
   config = withIosDeploymentTargetXcodeProject(config);
   config = withAndroidMusicKitAars(config, { androidMusicKitAarDir });
+  config = withAndroidAllowBackupToolsReplace(config);
 
   return withInfoPlist(config, (c) => {
     const current = c.modResults.NSAppleMusicUsageDescription;
