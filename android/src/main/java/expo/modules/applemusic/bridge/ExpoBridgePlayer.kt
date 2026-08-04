@@ -34,8 +34,8 @@ internal fun ModuleDefinitionBuilder.registerPlayerBridge(
     "Library playlist added to queue"
   }
 
-  AsyncFunction("configurePlayer") { mixWithOthers: Boolean ->
-    playbackController().configurePlayer(mixWithOthers)
+  AsyncFunction("configurePlayer") { options: Map<String, Any?> ->
+    playbackController().configurePlayer(options)
   }
 
   AsyncFunction("getCurrentState") {

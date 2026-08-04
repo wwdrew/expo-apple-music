@@ -76,7 +76,7 @@ enum BridgeResponses {
     ["summaries": items]
   }
 
-  static func configurePlayer(mixWithOthers: Bool) -> [String: Any] {
-    ["mixWithOthers": mixWithOthers]
+  static func configurePlayer(options: [String: Any]) -> [String: Any] {
+    ["mixWithOthers": false].merging(options) { _, latest in latest }
   }
 }

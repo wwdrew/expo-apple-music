@@ -233,9 +233,9 @@ extension ExpoAppleMusicModule {
       )
     }
 
-    AsyncFunction("configurePlayer") { (mixWithOthers: Bool) -> [String: Any] in
-      try self.playbackController.configureAudioSession(mixWithOthers: mixWithOthers)
-      return BridgeResponses.configurePlayer(mixWithOthers: mixWithOthers)
+    AsyncFunction("configurePlayer") { (options: [String: Any]) -> [String: Any] in
+      let configured = try self.playbackController.configurePlayer(options: options)
+      return BridgeResponses.configurePlayer(options: configured)
     }
 
     Function("play") {

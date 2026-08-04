@@ -27,8 +27,8 @@ export function createPlayerBridge(
       return 'Library playlist added to queue';
     },
 
-    configurePlayer(mixWithOthers: boolean) {
-      return playback.configurePlayer(mixWithOthers);
+    configurePlayer(options: Record<string, unknown>) {
+      return playback.configurePlayer(options);
     },
 
     getCurrentState: () => playback.currentState(),

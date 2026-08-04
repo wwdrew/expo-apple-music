@@ -9,6 +9,52 @@ import { MusicModule, musicEventEmitter } from '../native-module';
 
 export interface PlayerConfig {
   mixWithOthers: boolean;
+  playerType?: PlayerType;
+  audioSession?: AudioSessionConfig;
+}
+
+export type PlayerType = 'application' | 'system';
+
+export type AudioSessionCategory =
+  | 'ambient'
+  | 'soloAmbient'
+  | 'playback'
+  | 'record'
+  | 'playAndRecord'
+  | 'multiRoute';
+
+export type AudioSessionMode =
+  | 'default'
+  | 'voiceChat'
+  | 'videoChat'
+  | 'gameChat'
+  | 'videoRecording'
+  | 'measurement'
+  | 'moviePlayback'
+  | 'spokenAudio'
+  | 'voicePrompt';
+
+export type AudioSessionCategoryOption =
+  | 'mixWithOthers'
+  | 'duckOthers'
+  | 'interruptSpokenAudioAndMixWithOthers'
+  | 'allowBluetooth'
+  | 'allowBluetoothA2DP'
+  | 'allowAirPlay'
+  | 'defaultToSpeaker'
+  | 'overrideMutedMicrophoneInterruption';
+
+export interface AudioSessionConfig {
+  category?: AudioSessionCategory;
+  mode?: AudioSessionMode;
+  options?: AudioSessionCategoryOption[];
+  setActive?: boolean;
+}
+
+export interface ConfigurePlayerOptions {
+  mixWithOthers?: boolean;
+  playerType?: PlayerType;
+  audioSession?: AudioSessionConfig;
 }
 
 export interface PlaybackTimeUpdate {
@@ -114,12 +160,25 @@ class Player {
    *
    * **Android / web** — Returns the same `PlayerConfig` shape; session category,
    * ducking, and focus behavior are not fully mirrored. Do not assume iOS parity.
+   *
+   * Accepts a legacy `boolean` (`mixWithOthers`) or an options object.
    */
-  public static async configurePlayer(mixWithOthers = false): Promise<PlayerConfig> {
+  public static async configurePlayer(
+    options: boolean | ConfigurePlayerOptions = false,
+  ): Promise<PlayerConfig> {
+    const normalizedOptions = normalizePlayerConfig(options);
     return callNative('Player.configurePlayer', async () =>
-      (await MusicModule.configurePlayer(mixWithOthers)) as PlayerConfig,
+      (await MusicModule.configurePlayer(normalizedOptions)) as PlayerConfig,
     );
   }
+}
+
+function normalizePlayerConfig(options: boolean | ConfigurePlayerOptions): ConfigurePlayerOptions {
+  if (typeof options === 'boolean') {
+    return { mixWithOthers: options };
+  }
+  const { mixWithOthers = false, ...rest } = options;
+  return { mixWithOthers, ...rest };
 }
 
 export default Player;

@@ -35,8 +35,8 @@ function mapPlaybackStatus(isPlaying: boolean, playbackState: string): string {
 }
 
 export class WebPlaybackController {
-  configurePlayer(mixWithOthers: boolean): Record<string, unknown> {
-    return { mixWithOthers };
+  configurePlayer(options: Record<string, unknown>): Record<string, unknown> {
+    return { mixWithOthers: false, ...options };
   }
 
   async currentState(): Promise<Record<string, unknown>> {

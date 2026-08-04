@@ -142,7 +142,7 @@ Legend: ✅ supported · ⚠️ supported with differences · ❌ not supported 
 | `playLibraryPlaylist(playlistId, startingAt?)` | ✅ | `startingAt === -1` → `0` |
 | `Player.play` / `pause` / skip / seek / restart / `togglePlayerState` | ✅ | MK player controls |
 | `Player.getCurrentState()` | ⚠️ | Map MK `nowPlayingItem` / playback state to `PlaybackState`; field timing may differ slightly from native |
-| `Player.configurePlayer(mixWithOthers)` | ⚠️ | Return `{ mixWithOthers }` for API shape; **no** AVAudioSession equivalent on web |
+| `Player.configurePlayer(options)` | ⚠️ | Return normalized options (including `mixWithOthers`) for API shape; **no** AVAudioSession equivalent on web |
 | Hooks: `usePlaybackState`, `useIsPlaying`, `useCurrentSong` | ✅ | Driven by same events if observer maps correctly |
 
 ### Events
@@ -186,7 +186,7 @@ Implement every method exposed by `ios/ExpoAppleMusicModule.swift` (same names A
 | `setPlaybackQueue` | `WebQueueService` |
 | `playLibrarySong` | `WebQueueService` |
 | `playLibraryPlaylist` | `WebQueueService` |
-| `configurePlayer` | No-op audio session; return `{ mixWithOthers }` |
+| `configurePlayer` | No-op audio session; return normalized options payload |
 | `getCurrentState` | `WebPlaybackController` |
 | `play` / `pause` / `skipToNextEntry` / `skipToPreviousEntry` / `restartCurrentEntry` / `seekToTime` / `togglePlayerState` | `WebPlaybackController` |
 | `OnStartObserving` / `OnStopObserving` | Start/stop `WebPlaybackObserver` |

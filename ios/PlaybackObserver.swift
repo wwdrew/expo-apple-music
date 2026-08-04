@@ -2,7 +2,6 @@
 // Modern Swift Concurrency-based observation for playback state and time updates.
 // Performance-optimized: network calls run off main thread, only UI updates on MainActor.
 
-import Combine
 import Foundation
 import MusicKit
 
@@ -34,6 +33,7 @@ final class PlaybackObserver {
   private var stateObservationTask: Task<Void, Never>?
   private var queueObservationTask: Task<Void, Never>?
   private var timeUpdateTask: Task<Void, Never>?
+  private var playerTypeObservation: NSObjectProtocol?
 
   /// Thread-safe access to last reported status using actor isolation
   private let statusTracker = StatusTracker()
@@ -56,6 +56,7 @@ final class PlaybackObserver {
   func startObserving() {
     startStateObservation()
     startQueueObservation()
+    observePlayerTypeChanges()
     // Start time updates if already playing
     if playbackController.state.playbackStatus == .playing {
       startTimeUpdates()
@@ -66,6 +67,10 @@ final class PlaybackObserver {
     stateObservationTask?.cancel()
     queueObservationTask?.cancel()
     timeUpdateTask?.cancel()
+    if let observer = playerTypeObservation {
+      NotificationCenter.default.removeObserver(observer)
+      playerTypeObservation = nil
+    }
     stateObservationTask = nil
     queueObservationTask = nil
     timeUpdateTask = nil
@@ -85,14 +90,7 @@ final class PlaybackObserver {
     
     stateObservationTask = Task.detached {
       // Use AsyncStream to bridge objectWillChange
-      let stateStream = AsyncStream<Void> { continuation in
-        let cancellable = ApplicationMusicPlayer.shared.state.objectWillChange.sink { _ in
-          continuation.yield()
-        }
-        continuation.onTermination = { _ in
-          cancellable.cancel()
-        }
-      }
+      let stateStream = playbackController.stateChangeStream()
 
       for await _ in stateStream {
         guard !Task.isCancelled else { break }
@@ -142,14 +140,7 @@ final class PlaybackObserver {
     weak let weakDelegate = self.delegate
     
     queueObservationTask = Task.detached {
-      let queueStream = AsyncStream<Void> { continuation in
-        let cancellable = ApplicationMusicPlayer.shared.queue.objectWillChange.sink { _ in
-          continuation.yield()
-        }
-        continuation.onTermination = { _ in
-          cancellable.cancel()
-        }
-      }
+      let queueStream = playbackController.queueChangeStream()
 
       for await _ in queueStream {
         guard !Task.isCancelled else { break }
@@ -200,6 +191,22 @@ final class PlaybackObserver {
   private func stopTimeUpdates() {
     timeUpdateTask?.cancel()
     timeUpdateTask = nil
+  }
+
+  private func observePlayerTypeChanges() {
+    if playerTypeObservation != nil { return }
+    playerTypeObservation = NotificationCenter.default.addObserver(
+      forName: PlaybackController.playerTypeDidChangeNotification,
+      object: nil,
+      queue: nil
+    ) { [weak self] _ in
+      self?.stopTimeUpdates()
+      self?.startStateObservation()
+      self?.startQueueObservation()
+      if self?.playbackController.state.playbackStatus == .playing {
+        self?.startTimeUpdates()
+      }
+    }
   }
 }
 

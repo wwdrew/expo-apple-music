@@ -132,7 +132,7 @@ export const API_MODULES: ApiModule[] = [
       {
         id: "configurePlayer",
         name: "configurePlayer",
-        signature: "Player.configurePlayer(mixWithOthers?)",
+        signature: "Player.configurePlayer(options?)",
         summary: "Configure the audio session before playback.",
       },
       {

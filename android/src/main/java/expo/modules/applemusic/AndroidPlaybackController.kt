@@ -183,8 +183,8 @@ internal class AndroidPlaybackController private constructor(
   }
 
   /** API parity with iOS `configureAudioSession`; playback focus is handled by [MediaPlayerController]. */
-  fun configurePlayer(mixWithOthers: Boolean): Map<String, Any?> =
-    mapOf("mixWithOthers" to mixWithOthers)
+  fun configurePlayer(options: Map<String, Any?>): Map<String, Any?> =
+    mapOf("mixWithOthers" to false) + options
 
   /**
    * [MediaPlayerController.prepare] loads queue items asynchronously — wait for

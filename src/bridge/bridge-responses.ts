@@ -99,7 +99,7 @@ export const BridgeResponses = {
     return { summaries: items };
   },
 
-  configurePlayer(mixWithOthers: boolean): { mixWithOthers: boolean } {
-    return { mixWithOthers };
+  configurePlayer(options: Record<string, unknown>): Record<string, unknown> {
+    return { mixWithOthers: false, ...options };
   },
 } as const;
