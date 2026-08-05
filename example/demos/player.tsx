@@ -1,4 +1,4 @@
-import { MusicItem, Player } from "@wwdrew/expo-apple-music";
+import { MusicItem, Player, type ConfigurePlayerOptions } from "@wwdrew/expo-apple-music";
 import { formatApiError } from "../lib/format-error";
 import { requireMusicToken } from "../lib/require-music-token";
 import { useEffect, useState } from "react";
@@ -11,17 +11,35 @@ import { RunButton } from "./helpers";
 
 export function ConfigurePlayerDemo() {
   const { appendLog } = useApp();
+
+  const run = (label: string, options: boolean | ConfigurePlayerOptions = false) => {
+    void Player.configurePlayer(options)
+      .then((c) =>
+        appendLog(
+          `${label} → playerType=${c.playerType}, mixWithOthers=${c.mixWithOthers}, session=${JSON.stringify(c.audioSession)}`,
+        ),
+      )
+      .catch((e) => appendLog(`error: ${formatApiError(e)}`));
+  };
+
   return (
     <ApiScreen
+      hint="Default backend is application (in-app). Prefer player (alias of playerType). system is iOS Music app / system playback. Android/web only echo the payload."
       actions={
-        <RunButton
-          title="Run configurePlayer(false)"
-          onPress={() => {
-            void Player.configurePlayer(false)
-              .then((c) => appendLog(`mixWithOthers: ${c.mixWithOthers}`))
-              .catch((e) => appendLog(`error: ${formatApiError(e)}`));
-          }}
-        />
+        <>
+          <RunButton title="Defaults (application, exclusive)" onPress={() => run("defaults", {})} />
+          <RunButton title="mixWithOthers: true" onPress={() => run("mix", { mixWithOthers: true })} />
+          <RunButton title="player: system" onPress={() => run("system", { player: "system" })} />
+          <RunButton
+            title="player: application"
+            onPress={() => run("application", { player: "application" })}
+          />
+          <RunButton
+            title="Legacy playerType: system"
+            onPress={() => run("legacy-playerType", { playerType: "system" })}
+          />
+          <RunButton title="Legacy boolean false" onPress={() => run("legacy-false", false)} />
+        </>
       }
     />
   );

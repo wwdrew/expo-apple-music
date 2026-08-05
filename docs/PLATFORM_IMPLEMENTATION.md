@@ -97,7 +97,10 @@ Heavy rotation: `History.getHeavyRotation()` — not this module ([RECOMMENDATIO
 |--------|-----|---------|
 | `Player.setQueue()` | **Native** MusicKit player + catalog/library queue | MusicKit playback AAR |
 | `Player.playLibrarySong` / `playLibraryPlaylist` | **Native** (+ library ID resolution in queue service) | REST resolve catalog IDs + queue |
+| `Player.configurePlayer(options?)` | Native `ApplicationMusicPlayer` (default) or `SystemMusicPlayer`; full `AVAudioSession` | Stub payload; audio focus via playback AAR |
 | `Player` transport, `getCurrentState`, hooks | **Native** | Native AAR |
+
+**Player backends (iOS):** Default is **`application`** (`ApplicationMusicPlayer`) — the in-app queue used by hooks and the example player bar. Prefer `player: 'system'` (or legacy `playerType`) only when you need Music-app / system playback. Prefer top-level `mixWithOthers` for mixing; use `audioSession` only for advanced category/mode/options. Full guide: [PLAYBACK.md](./PLAYBACK.md).
 
 On **Android**, catalog `setQueue` requires a music user token in the native session (set when `authorization` returns `authorized`, or when `playLibrary*` passes a token). **Web** relies on MusicKit JS authorize; **iOS** uses system MusicKit account state.
 
@@ -123,4 +126,5 @@ On **Android**, catalog `setQueue` requires a music user token in the native ses
 | Recent played containers | Apple caps some `/v1/me/recent/*` responses (e.g. 10 items); native vs REST may differ slightly in ordering |
 | `Auth.checkSubscription()` | Android infers flags; iOS uses MusicKit subscription APIs |
 | Catalog station queue | iOS native ✅; Android playback AAR ❌ |
+| `Player.configurePlayer` | iOS: real backend + AVAudioSession; Android/web: stub payload only ([PLAYBACK.md](./PLAYBACK.md)) |
 | REST on iOS without dev JWT | GET may use `MusicDataRequest` fallback; **writes** require stored tokens |

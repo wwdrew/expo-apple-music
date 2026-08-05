@@ -22,4 +22,6 @@ For **iOS native vs REST per method** and mapper parity rules, read [docs/PLATFO
 
 For **recommendations vs history** (heavy rotation), read [docs/RECOMMENDATIONS.md](./docs/RECOMMENDATIONS.md) and [docs/HISTORY.md](./docs/HISTORY.md).
 
+For **playback** (`configurePlayer`, application vs system player, mixing), read [docs/PLAYBACK.md](./docs/PLAYBACK.md).
+
 For **TypeScript type naming** (no `I`/`T` prefixes), read [docs/TYPES.md](./docs/TYPES.md).

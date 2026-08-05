@@ -48,3 +48,7 @@ Reference mapper and fixtures for tests: `src/mappers/apple-music-json-mapper.ts
 ## Pagination
 
 Use `PaginationOptions` (`limit`, `offset`) for list calls. Defaults match native (typically `limit: 25`, `offset: 0`).
+
+## Player configuration
+
+`ConfigurePlayerOptions` uses plain names (`player`, `mixWithOthers`, `audioSession`). Prefer **`player`** over the older **`playerType`** alias (both accepted). See [PLAYBACK.md](./PLAYBACK.md).

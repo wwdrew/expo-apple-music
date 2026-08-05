@@ -17,6 +17,7 @@ Guides for using **@wwdrew/expo-apple-music** in your Expo app. Browse this fold
 | ----- | -------------- |
 | **[ERROR_CODES.md](./ERROR_CODES.md)** | `AppleMusicError` codes from the bridge |
 | **[APPLE_MUSIC_API.md](./APPLE_MUSIC_API.md)** | Method coverage matrix (iOS / Android / web) |
+| **[PLAYBACK.md](./PLAYBACK.md)** | `configurePlayer` defaults, `player` / mix knobs, advanced session |
 | **[PLATFORM_IMPLEMENTATION.md](./PLATFORM_IMPLEMENTATION.md)** | Native vs REST per method (iOS nuances) |
 | **[RESOURCE_IDS.md](./RESOURCE_IDS.md)** | Catalog vs library IDs |
 
