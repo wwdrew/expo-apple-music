@@ -75,8 +75,4 @@ enum BridgeResponses {
   static func replaySummaries(_ items: [[String: Any]]) -> [String: Any] {
     ["summaries": items]
   }
-
-  static func configurePlayer(options: [String: Any]) -> [String: Any] {
-    ["mixWithOthers": false].merging(options) { _, latest in latest }
-  }
 }

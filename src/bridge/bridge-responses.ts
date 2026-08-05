@@ -1,5 +1,7 @@
 /** Standard bridge response envelopes (keys match iOS/Android native modules). */
 
+import { stubConfigurePlayerResponse } from '../modules/normalize-player-config';
+
 export type CatalogSearchPayload = {
   songs: unknown[];
   albums: unknown[];
@@ -100,6 +102,6 @@ export const BridgeResponses = {
   },
 
   configurePlayer(options: Record<string, unknown>): Record<string, unknown> {
-    return { mixWithOthers: false, ...options };
+    return stubConfigurePlayerResponse(options);
   },
 } as const;

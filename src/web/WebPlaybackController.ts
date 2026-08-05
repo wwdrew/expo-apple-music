@@ -1,4 +1,5 @@
 import { mapSong } from '../mappers/apple-music-json-mapper';
+import { stubConfigurePlayerResponse } from '../modules/normalize-player-config';
 import type { MusicKitMediaItem } from './musickit-types';
 import { getMusic, getMusicIfConfigured } from './MusicKitLoader';
 
@@ -36,7 +37,7 @@ function mapPlaybackStatus(isPlaying: boolean, playbackState: string): string {
 
 export class WebPlaybackController {
   configurePlayer(options: Record<string, unknown>): Record<string, unknown> {
-    return { mixWithOthers: false, ...options };
+    return stubConfigurePlayerResponse(options);
   }
 
   async currentState(): Promise<Record<string, unknown>> {

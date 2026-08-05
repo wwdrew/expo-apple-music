@@ -200,11 +200,47 @@ final class PlaybackObserver {
       object: nil,
       queue: nil
     ) { [weak self] _ in
-      self?.stopTimeUpdates()
-      self?.startStateObservation()
-      self?.startQueueObservation()
-      if self?.playbackController.state.playbackStatus == .playing {
-        self?.startTimeUpdates()
+      self?.handlePlayerTypeChange()
+    }
+  }
+
+  private func handlePlayerTypeChange() {
+    stopTimeUpdates()
+    startStateObservation()
+    startQueueObservation()
+
+    let playbackController = self.playbackController
+    let statusTracker = self.statusTracker
+    weak let weakDelegate = self.delegate
+    weak let weakSelf = self
+
+    Task.detached {
+      await statusTracker.reset()
+      guard !Task.isCancelled else { return }
+
+      let state = playbackController.state
+      let songInfo = await playbackController.fetchCurrentSongInfo()
+      guard !Task.isCancelled else { return }
+
+      let info = PlaybackInfo(
+        playbackStatus: MusicItemMapper.describePlaybackStatus(state.playbackStatus),
+        playbackRate: state.playbackRate,
+        playbackTime: playbackController.playbackTime,
+        currentSong: songInfo
+      )
+
+      let delegate = weakDelegate
+      let observer = weakSelf
+      await MainActor.run {
+        delegate?.playbackStateDidChange(info)
+        delegate?.currentSongDidChange(songInfo)
+
+        if state.playbackStatus == .playing {
+          observer?.startTimeUpdates()
+        } else {
+          let time = playbackController.playbackTime
+          delegate?.playbackTimeDidUpdate(time.isNaN ? 0 : time)
+        }
       }
     }
   }

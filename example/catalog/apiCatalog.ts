@@ -133,7 +133,8 @@ export const API_MODULES: ApiModule[] = [
         id: "configurePlayer",
         name: "configurePlayer",
         signature: "Player.configurePlayer(options?)",
-        summary: "Configure the audio session before playback.",
+        summary:
+          "Configure playback (default: application). Prefer { mixWithOthers } or { player }. See docs/PLAYBACK.md.",
       },
       {
         id: "setQueue",

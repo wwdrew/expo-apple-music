@@ -6,6 +6,15 @@ describe('BridgeResponses', () => {
     expect(BridgeResponses.songs([{ id: '1' }])).toEqual({ songs: [{ id: '1' }] });
     expect(BridgeResponses.recentlyPlayedResources([])).toEqual({ recentlyPlayedItems: [] });
   });
+
+  it('forces mixWithOthers false on configurePlayer stubs', () => {
+    expect(BridgeResponses.configurePlayer({ mixWithOthers: true, playerType: 'system' })).toEqual(
+      expect.objectContaining({
+        mixWithOthers: false,
+        playerType: 'system',
+      }),
+    );
+  });
 });
 
 describe('BRIDGE_METHODS', () => {

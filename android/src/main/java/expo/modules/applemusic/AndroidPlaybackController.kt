@@ -182,9 +182,25 @@ internal class AndroidPlaybackController private constructor(
     controller?.removeListener(listener)
   }
 
-  /** API parity with iOS `configureAudioSession`; playback focus is handled by [MediaPlayerController]. */
-  fun configurePlayer(options: Map<String, Any?>): Map<String, Any?> =
-    mapOf("mixWithOthers" to false) + options
+  /** API parity with iOS `configurePlayer`; playback focus is handled by [MediaPlayerController]. */
+  fun configurePlayer(options: Map<String, Any?>): Map<String, Any?> {
+    val payload = linkedMapOf<String, Any?>(
+      "playerType" to "application",
+      "audioSession" to mapOf(
+        "category" to "playback",
+        "mode" to "default",
+        "options" to emptyList<String>(),
+        "setActive" to true,
+      ),
+    )
+    payload.putAll(options)
+    // Stubs do not implement AVAudioSession mixing — never claim otherwise.
+    payload["mixWithOthers"] = false
+    if (payload["playerType"] == null) {
+      payload["playerType"] = "application"
+    }
+    return payload
+  }
 
   /**
    * [MediaPlayerController.prepare] loads queue items asynchronously — wait for

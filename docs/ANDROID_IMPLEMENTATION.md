@@ -52,7 +52,7 @@ Everything below must work on Android (parity with `ios/ExpoAppleMusicModule.swi
 | `setPlaybackQueue` | `QueueService.setQueue` | Playback AAR + REST when library IDs need resolution |
 | `playLibrarySong` | `QueueService.playLibrarySong` | Same |
 | `playLibraryPlaylist` | `QueueService.playLibraryPlaylist` | Same |
-| `configurePlayer` | `PlaybackController.configureAudioSession` | Parity return; audio focus optional |
+| `configurePlayer` | `PlaybackController.configurePlayer` | Stub normalized payload; audio focus optional |
 | `getCurrentState` | `PlaybackController` + mapper | Playback AAR listener |
 | `play` / `pause` / skip / seek / restart / `togglePlayerState` | `PlaybackController` | Playback AAR |
 | Playback events + `OnStartObserving` | `PlaybackObserver` | `MediaPlayerController.Listener` |

@@ -74,12 +74,19 @@ export type { RecentlyPlayedTracksResponse } from './modules/history';
 
 export type {
   PlayerConfig,
+  PlayerType,
+  AudioSessionCategory,
+  AudioSessionMode,
+  AudioSessionCategoryOption,
+  AudioSessionConfig,
+  ConfigurePlayerOptions,
   PlaybackError,
   PlaybackTimeUpdate,
   CurrentSongChangeEvent,
   PlayerEventMap,
 } from './modules/player';
 
+export { normalizePlayerConfig } from './modules/normalize-player-config';
 export type { AppleMusicError } from './utils/apple-music-error';
 
 export * from './constants/apple-music-error-codes';

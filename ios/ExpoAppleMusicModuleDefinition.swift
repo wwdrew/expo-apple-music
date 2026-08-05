@@ -234,8 +234,8 @@ extension ExpoAppleMusicModule {
     }
 
     AsyncFunction("configurePlayer") { (options: [String: Any]) -> [String: Any] in
-      let configured = try self.playbackController.configurePlayer(options: options)
-      return BridgeResponses.configurePlayer(options: configured)
+      // PlaybackController already returns the normalized bridge payload.
+      try self.playbackController.configurePlayer(options: options)
     }
 
     Function("play") {

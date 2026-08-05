@@ -67,6 +67,7 @@ import {
   AuthStatus,
   Catalog,
   CatalogSearchType,
+  MusicItem,
   Player,
 } from '@wwdrew/expo-apple-music';
 
@@ -81,9 +82,17 @@ if (status !== AuthStatus.AUTHORIZED || !musicUserToken) {
 const { songs } = await Catalog.search('Beatles', [CatalogSearchType.SONGS]);
 const first = songs[0];
 if (first) {
-  await Player.setQueue({ songs: [first] });
-  await Player.play();
+  await Player.configurePlayer(); // optional — defaults to in-app (application) player
+  await Player.setQueue(first.id, MusicItem.SONG);
+  Player.play();
 }
+```
+
+Optional mixing (iOS) or system Music playback — see **[PLAYBACK.md](./PLAYBACK.md)**:
+
+```ts
+await Player.configurePlayer({ mixWithOthers: true });
+await Player.configurePlayer({ player: 'system' }); // iOS Music app / system queue
 ```
 
 Refresh the JWT without re-prompting the user:
@@ -134,5 +143,6 @@ cd example && npx expo start
 ## Next steps
 
 - **[AUTH.md](./AUTH.md)** — subscription checks, storage, errors
+- **[PLAYBACK.md](./PLAYBACK.md)** — `configurePlayer` defaults (`application` backend, mixing)
 - **[APPLE_MUSIC_API.md](./APPLE_MUSIC_API.md)** — what works on each platform
 - **[docs/README.md](./README.md)** — full doc index
