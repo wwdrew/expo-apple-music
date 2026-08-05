@@ -1,5 +1,7 @@
 // LibraryService.swift
-// Handles user's Apple Music library operations via REST (parity with Android/web).
+// Library **reads** (lists/search) use REST for pagination parity with Android/web.
+// Native MusicLibraryRequest helpers below are only for **playback queue** resolution
+// (see QueueService) — not for Library.* JS list APIs.
 
 import Foundation
 import MusicKit
@@ -131,8 +133,9 @@ final class LibraryService {
     }
   }
 
-  // MARK: - Native MusicKit (library playback queue only)
+  // MARK: - Native MusicKit (playback queue resolution only)
 
+  /// Resolves a library song for `QueueService` / `playLibrary*`. Not used by `Library.getSongs`.
   func fetchSong(id: MusicItemID) async throws -> Song? {
     var request = MusicLibraryRequest<Song>()
     request.filter(matching: \.id, equalTo: id)
