@@ -6,6 +6,41 @@ enum BridgeResponses {
     ["id": id]
   }
 
+  static func authorization(status: String, musicUserToken: String?) -> [String: Any?] {
+    ["status": status, "musicUserToken": musicUserToken]
+  }
+
+  static func subscription(
+    canPlayCatalogContent: Bool,
+    canBecomeSubscriber: Bool,
+    hasCloudLibraryEnabled: Bool,
+    isMusicCatalogSubscriptionEligible: Bool
+  ) -> [String: Any] {
+    [
+      "canPlayCatalogContent": canPlayCatalogContent,
+      "canBecomeSubscriber": canBecomeSubscriber,
+      "hasCloudLibraryEnabled": hasCloudLibraryEnabled,
+      "isMusicCatalogSubscriptionEligible": isMusicCatalogSubscriptionEligible,
+    ]
+  }
+
+  static func playbackState(
+    playbackRate: Double,
+    playbackStatus: String,
+    playbackTime: Double,
+    currentSong: [String: Any]?
+  ) -> [String: Any] {
+    var result: [String: Any] = [
+      "playbackRate": playbackRate,
+      "playbackStatus": playbackStatus,
+      "playbackTime": playbackTime,
+    ]
+    if let currentSong {
+      result["currentSong"] = currentSong
+    }
+    return result
+  }
+
   static func catalogSearch(_ result: CatalogService.SearchResult) -> [String: Any] {
     [
       "songs": result.songs,

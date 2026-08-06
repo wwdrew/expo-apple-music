@@ -9,3 +9,6 @@ inside the result builder; `_exposedDefinition()` is the supported composition h
 (also used by the `@ExpoModule` macro).
 
 `ExpoAppleMusicModuleDefinition.swift` should stay lifecycle-only (name, events, observe).
+
+Use `ExpoBridge.asyncBridge { … }` in `ExpoBridge*.swift` wrappers so thrown errors
+map through `AppleMusicBridgeError` consistently (see `ExpoBridgeHelpers.swift`).

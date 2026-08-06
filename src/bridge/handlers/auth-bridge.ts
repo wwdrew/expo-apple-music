@@ -23,29 +23,25 @@ export function createAuthBridge(api: WebAppleMusicApiClient, subscription: WebS
       developerToken: string | null,
       _startScreenMessage: string | null,
       _hideStartScreen: boolean | null,
-    ): Promise<Record<string, string | undefined>> {
+    ): Promise<Record<string, string | undefined | null>> {
       const token = requireDeveloperToken(developerToken);
       const music = await configureMusicKit(token);
       if (music.isAuthorized) {
-        return {
-          status: 'authorized',
-          musicUserToken: extractMusicUserToken(music),
-        };
+        return BridgeResponses.authorization('authorized', extractMusicUserToken(music));
       }
       try {
         const result = await music.authorize();
         const musicAfter = await getMusicKitInstance();
         const status = authStatusFromMusicKit(musicAfter, result);
         const resolvedStatus = status ?? 'unknown';
-        return {
-          status: resolvedStatus,
-          musicUserToken:
-            resolvedStatus === 'authorized'
-              ? extractMusicUserToken(musicAfter, result)
-              : undefined,
-        };
+        return BridgeResponses.authorization(
+          resolvedStatus,
+          resolvedStatus === 'authorized'
+            ? extractMusicUserToken(musicAfter, result)
+            : undefined,
+        );
       } catch (error) {
-        return { status: authStatusFromAuthorizeError(error) };
+        return BridgeResponses.authorization(authStatusFromAuthorizeError(error), undefined);
       }
     },
 

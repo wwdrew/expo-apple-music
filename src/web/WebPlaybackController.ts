@@ -1,14 +1,8 @@
 import { mapSong } from '../mappers/apple-music-json-mapper';
 import { stubConfigurePlayerResponse } from '../modules/normalize-player-config';
+import { BridgeResponses } from '../bridge/bridge-responses';
 import type { MusicKitMediaItem } from './musickit-types';
 import { getMusic, getMusicIfConfigured } from './MusicKitLoader';
-
-const IDLE_PLAYBACK_STATE: Record<string, unknown> = {
-  currentSong: undefined,
-  playbackRate: 0,
-  playbackStatus: 'paused',
-  playbackTime: 0,
-};
 
 function mapNowPlaying(item: MusicKitMediaItem | null): Record<string, unknown> | undefined {
   if (!item) {
@@ -43,18 +37,22 @@ export class WebPlaybackController {
   async currentState(): Promise<Record<string, unknown>> {
     const music = await getMusicIfConfigured();
     if (!music) {
-      return IDLE_PLAYBACK_STATE;
+      return BridgeResponses.playbackState({
+        playbackRate: 0,
+        playbackStatus: 'paused',
+        playbackTime: 0,
+      });
     }
     const item = music.nowPlayingItem ?? music.player?.nowPlayingItem ?? null;
     const isPlaying = music.isPlaying ?? music.player?.isPlaying ?? false;
     const playbackState = music.player?.playbackState ?? '';
     const playbackTime = music.currentPlaybackTime ?? music.player?.currentPlaybackTime ?? 0;
-    return {
-      currentSong: mapNowPlaying(item),
+    return BridgeResponses.playbackState({
       playbackRate: isPlaying ? 1 : 0,
       playbackStatus: mapPlaybackStatus(isPlaying, playbackState),
       playbackTime,
-    };
+      currentSong: mapNowPlaying(item),
+    });
   }
 
   async play(): Promise<void> {

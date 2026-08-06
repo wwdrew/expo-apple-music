@@ -53,10 +53,7 @@ internal fun ModuleDefinitionBuilder.registerAuthBridge(
       AndroidPlaybackController.warmUp(context)
     }
 
-    mapOf(
-      "status" to result.status,
-      "musicUserToken" to result.musicUserToken,
-    )
+    BridgeResponses.authorization(result.status, result.musicUserToken)
   }
 
   AsyncFunction("checkSubscription") Coroutine { musicUserToken: String ->

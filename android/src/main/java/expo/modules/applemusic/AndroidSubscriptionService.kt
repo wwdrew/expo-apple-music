@@ -14,11 +14,11 @@ internal class AndroidSubscriptionService(
     val libraryOk = library.probeLibraryAccess(musicUserToken)
     val canPlay = libraryOk
 
-    return mapOf(
-      "canPlayCatalogContent" to canPlay,
-      "canBecomeSubscriber" to false,
-      "hasCloudLibraryEnabled" to libraryOk,
-      "isMusicCatalogSubscriptionEligible" to false,
+    return BridgeResponses.subscription(
+      canPlayCatalogContent = canPlay,
+      canBecomeSubscriber = false,
+      hasCloudLibraryEnabled = libraryOk,
+      isMusicCatalogSubscriptionEligible = false,
     )
   }
 }

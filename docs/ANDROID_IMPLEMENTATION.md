@@ -88,7 +88,11 @@ AppleMusicJsonMapper.kt         // API resources → Song / Album / Playlist dic
 AndroidCatalogService.kt        // catalogSearch (mirror CatalogService.swift)
 AndroidLibraryService.kt        // library reads (mirror LibraryService.swift)
 AndroidQueueService.kt          // setPlaybackQueue, playLibrary* (mirror QueueService.swift)
-AndroidPlaybackController.kt    // MediaPlayerController, native libs, transport
+AndroidPlaybackController.kt    // Façade: transport, queue builders, singleton
+PlaybackSession.kt               // MediaPlayerController lifecycle + listeners
+PlaybackQueuePrepare.kt         // Async prepare / queue-ready wait
+PlaybackStateSnapshot.kt        // getCurrentState + song cache
+PlaybackErrorMapper.kt          // MediaPlayerException → CodedException
 AndroidPlaybackObserver.kt      // events
 MusicKitTokenProvider.kt        // TokenProvider → AuthenticatedSession
 AuthenticatedSession.kt         // REST/catalog credential snapshot + storefront cache

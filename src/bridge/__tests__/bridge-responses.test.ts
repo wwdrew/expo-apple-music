@@ -15,6 +15,39 @@ describe('BridgeResponses', () => {
       }),
     );
   });
+
+  it('builds auth and playback envelopes', () => {
+    expect(BridgeResponses.authorization('authorized', 'tok')).toEqual({
+      status: 'authorized',
+      musicUserToken: 'tok',
+    });
+    expect(
+      BridgeResponses.subscription({
+        canPlayCatalogContent: true,
+        canBecomeSubscriber: false,
+        hasCloudLibraryEnabled: true,
+        isMusicCatalogSubscriptionEligible: false,
+      }),
+    ).toEqual({
+      canPlayCatalogContent: true,
+      canBecomeSubscriber: false,
+      hasCloudLibraryEnabled: true,
+      isMusicCatalogSubscriptionEligible: false,
+    });
+    expect(
+      BridgeResponses.playbackState({
+        playbackRate: 1,
+        playbackStatus: 'playing',
+        playbackTime: 12,
+        currentSong: { id: '1' },
+      }),
+    ).toEqual({
+      playbackRate: 1,
+      playbackStatus: 'playing',
+      playbackTime: 12,
+      currentSong: { id: '1' },
+    });
+  });
 });
 
 describe('BRIDGE_METHODS', () => {

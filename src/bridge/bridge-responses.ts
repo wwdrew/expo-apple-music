@@ -31,6 +31,49 @@ export const BridgeResponses = {
     return { id };
   },
 
+  authorization(
+    status: string,
+    musicUserToken: string | null | undefined,
+  ): { status: string; musicUserToken: string | null | undefined } {
+    return { status, musicUserToken };
+  },
+
+  subscription(details: {
+    canPlayCatalogContent: boolean;
+    canBecomeSubscriber: boolean;
+    hasCloudLibraryEnabled: boolean;
+    isMusicCatalogSubscriptionEligible: boolean;
+  }): {
+    canPlayCatalogContent: boolean;
+    canBecomeSubscriber: boolean;
+    hasCloudLibraryEnabled: boolean;
+    isMusicCatalogSubscriptionEligible: boolean;
+  } {
+    return {
+      canPlayCatalogContent: details.canPlayCatalogContent,
+      canBecomeSubscriber: details.canBecomeSubscriber,
+      hasCloudLibraryEnabled: details.hasCloudLibraryEnabled,
+      isMusicCatalogSubscriptionEligible: details.isMusicCatalogSubscriptionEligible,
+    };
+  },
+
+  playbackState(state: {
+    playbackRate: number;
+    playbackStatus: string;
+    playbackTime: number;
+    currentSong?: unknown;
+  }): Record<string, unknown> {
+    const result: Record<string, unknown> = {
+      playbackRate: state.playbackRate,
+      playbackStatus: state.playbackStatus,
+      playbackTime: state.playbackTime,
+    };
+    if (state.currentSong !== undefined) {
+      result.currentSong = state.currentSong;
+    }
+    return result;
+  },
+
   catalogSearch(result: CatalogSearchPayload): CatalogSearchPayload {
     return {
       songs: result.songs,

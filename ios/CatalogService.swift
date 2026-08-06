@@ -1,5 +1,9 @@
 // CatalogService.swift
 // Handles Apple Music catalog search and item fetching.
+//
+// Architecture: Catalog ID resolution and native/REST fallback live here (and in
+// CatalogSearchStoreFactory). Do not add resolution branches in the Expo module,
+// definition, or ExpoBridgeCatalog.
 
 import Foundation
 import MusicKit

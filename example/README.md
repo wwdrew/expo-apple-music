@@ -57,3 +57,10 @@ If auth fails with 403 after the popup, see [docs/AUTH.md](../docs/AUTH.md#web-o
 - [docs/IOS_SETUP.md](../docs/IOS_SETUP.md) — full iOS signing and release checklist  
 - [docs/AUTH.md](../docs/AUTH.md) — auth behavior (incl. web / localhost)  
 - [docs/CLI.md](../docs/CLI.md) — `yarn dev-token`
+
+## Playground catalog
+
+`catalog/apiCatalog.ts` builds module/method lists from `src/bridge/bridge-methods.ts`.
+Signatures and summaries stay in `METHOD_UI` there; Hooks and `Player.addListener` are
+playground-only overlays. Adding a bridge method requires a matching `METHOD_UI` entry
+(or the example fails at import time).
