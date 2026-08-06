@@ -30,6 +30,13 @@ Golden files live under `fixtures/`:
 
 **Android:** `BridgeContractTest.kt` loads the same API inputs from `android/src/test/resources/fixtures/`.
 
+**iOS (REST):** `ios/BridgeContractPackage` runs XCTest against `RestJsonMapper` and the same `fixtures/` + `fixtures/expected/` files. MusicKit-native `MusicItemMapper` cases are not covered by static JSON (see test file comment).
+
+```sh
+yarn test:ios-bridge
+# or: swift test --package-path ios/BridgeContractPackage
+```
+
 Sync inputs before Android unit tests:
 
 ```sh
@@ -44,8 +51,8 @@ yarn sync:fixtures
 2. Add `fixtures/expected/my-output.json` (bridge shape).
 3. Register in `src/mappers/__tests__/bridge-contract.ts` → `BRIDGE_CONTRACT_CASES`.
 4. Implement in `apple-music-json-mapper.ts` and `AppleMusicJsonMapper.kt` (and `RestJsonMapper.swift` if REST-only).
-5. Mirror assertions in `BridgeContractTest.kt`.
-6. Run `yarn sync:fixtures` and `yarn test`.
+5. Mirror assertions in `BridgeContractTest.kt` **and** `ios/BridgeContractPackage` XCTest cases.
+6. Run `yarn sync:fixtures`, `yarn test`, and `yarn test:ios-bridge` (macOS).
 
 ---
 

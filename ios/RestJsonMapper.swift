@@ -4,7 +4,7 @@
 
 import Foundation
 
-@available(iOS 16.0, *)
+@available(iOS 16.0, macOS 13.0, *)
 enum RestJsonMapper {
 
   static func mapAlbum(_ resource: [String: Any]) -> [String: Any] {

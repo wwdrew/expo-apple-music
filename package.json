@@ -10,6 +10,7 @@
     "lint": "expo-module lint",
     "test": "jest --watchman=false",
     "test:expo": "expo-module test",
+    "test:ios-bridge": "swift test --package-path ios/BridgeContractPackage",
     "prepare": "expo-module prepare",
     "prepublishOnly": "npm run build && node scripts/npm-prepublish.mjs && expo-module prepublishOnly",
     "pack:check": "npm run build && node scripts/verify-npm-pack.mjs",
