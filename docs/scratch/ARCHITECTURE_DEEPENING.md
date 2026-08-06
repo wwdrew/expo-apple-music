@@ -217,6 +217,7 @@ Group bridge by domain with shared envelope/pagination helpers — or codegen fr
 **Notes**
 
 - 2026-05-20: `src/bridge/bridge-methods.ts` manifest; `BridgeResponses` + domain registration (`ios/bridge/`, `android/.../bridge/`, `src/bridge/handlers/`); shared `BridgePagination` on iOS; web module delegates via `createWebBridgeHandlers`.
+- 2026-08-05: iOS module definition is lifecycle-only; Expo function registration lives in `ios/bridge/ExpoBridgeRegistrations.swift` via `_exposedDefinition()` (Swift cannot nest Android-style `register*` inside `ModuleDefinitionBuilder`). See `ios/bridge/README.md`.
 
 ---
 
