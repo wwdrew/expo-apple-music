@@ -125,10 +125,7 @@ enum RestJsonMapper {
 
   private static func catalogPlaybackId(_ resource: [String: Any]) -> String? {
     let attributes = resource["attributes"] as? [String: Any] ?? [:]
-    guard let playParams = attributes["playParams"] as? [String: Any] else { return nil }
-    if let id = playParams["id"] as? String, !id.isEmpty { return id }
-    if let catalogId = playParams["catalogId"] as? String, !catalogId.isEmpty { return catalogId }
-    return nil
+    return BridgeMapperHelpers.catalogPlaybackId(fromPlayParams: attributes["playParams"] as? [String: Any])
   }
 
   /// Candidate catalog song ids for MusicKit lookup (playback id, resource id, playParams).
