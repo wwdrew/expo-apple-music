@@ -19,7 +19,12 @@ kotlin {
 val moduleRoot = rootProject.projectDir.parentFile!!
 
 val prepareMapperSources by tasks.registering(Sync::class) {
-  from(moduleRoot.resolve("src/main/java/expo/modules/applemusic/AppleMusicJsonMapper.kt"))
+  from(
+    moduleRoot.resolve("src/main/java/expo/modules/applemusic/AppleMusicJsonMapper.kt"),
+    moduleRoot.resolve("src/main/java/expo/modules/applemusic/LibraryIds.kt"),
+    moduleRoot.resolve("src/main/java/expo/modules/applemusic/PlaybackQueueRules.kt"),
+    moduleRoot.resolve("src/main/java/expo/modules/applemusic/PlaybackErrorMessages.kt"),
+  )
   into(layout.buildDirectory.dir("mapper-src/expo/modules/applemusic"))
 }
 

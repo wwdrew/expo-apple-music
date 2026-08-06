@@ -13,40 +13,25 @@ internal class AndroidQueueService(
     AppleMusicRestStack.create(context).library,
   )
 
-  enum class MediaType(val raw: String) {
-    SONG("song"),
-    ALBUM("album"),
-    PLAYLIST("playlist"),
-    STATION("station"),
-    ;
-
-    companion object {
-      fun from(raw: String): MediaType? = entries.find { it.raw == raw }
-    }
-  }
-
   suspend fun setQueue(itemId: String, type: String) {
     val mediaType =
-      MediaType.from(type) ?: throw AppleMusicErrors.unknownMediaType(type)
-    val isLibrary = LibraryIds.isLibraryId(itemId)
+      PlaybackQueueRules.MediaType.from(type) ?: throw AppleMusicErrors.unknownMediaType(type)
 
-    if (isLibrary) {
-      throw AppleMusicErrors.apiError(
-        "Library queue requires a music user token. Use Player.playLibrarySong or playLibraryPlaylist.",
-      )
+    if (LibraryIds.isLibraryId(itemId)) {
+      throw AppleMusicErrors.apiError(PlaybackQueueRules.LIBRARY_QUEUE_REQUIRES_TOKEN)
     } else {
       setCatalogQueue(itemId, mediaType)
     }
   }
 
-  private suspend fun setCatalogQueue(itemId: String, type: MediaType) {
+  private suspend fun setCatalogQueue(itemId: String, type: PlaybackQueueRules.MediaType) {
     val provider =
       when (type) {
-        MediaType.SONG -> playback.buildSongProvider(itemId)
-        MediaType.ALBUM -> playback.buildAlbumProvider(itemId)
-        MediaType.PLAYLIST -> playback.buildPlaylistProvider(itemId)
-        MediaType.STATION ->
-          throw AppleMusicErrors.apiError("Station playback is not supported on Android yet.")
+        PlaybackQueueRules.MediaType.SONG -> playback.buildSongProvider(itemId)
+        PlaybackQueueRules.MediaType.ALBUM -> playback.buildAlbumProvider(itemId)
+        PlaybackQueueRules.MediaType.PLAYLIST -> playback.buildPlaylistProvider(itemId)
+        PlaybackQueueRules.MediaType.STATION ->
+          throw AppleMusicErrors.apiError(PlaybackQueueRules.STATION_UNSUPPORTED_ON_ANDROID)
       }
     playback.clearSongCache()
     playback.prepareQueue(provider)
