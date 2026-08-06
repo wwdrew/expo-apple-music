@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/wwdrew/expo-apple-music/compare/v1.1.3...v1.2.0) (2026-08-06)
+
+
+### Features
+
+* **ios:** add configurable iOS player backend and AVAudioSession settings in Player.configurePlayer ([#25](https://github.com/wwdrew/expo-apple-music/issues/25)) ([92858dc](https://github.com/wwdrew/expo-apple-music/commit/92858dc7cd69b78a3eca3512bfa778140dc92dd2))
+
+
+### Bug Fixes
+
+* **android:** wire playbackErrorHandler once in module definition ([#28](https://github.com/wwdrew/expo-apple-music/issues/28)) ([37bfdd3](https://github.com/wwdrew/expo-apple-music/commit/37bfdd3743958e1aad5fb1ced3cde962ba63c0bc))
+
 ## [1.1.3](https://github.com/wwdrew/expo-apple-music/compare/v1.1.2...v1.1.3) (2026-06-08)
 
 
