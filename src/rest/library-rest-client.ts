@@ -7,7 +7,9 @@ import {
   mapSong,
   type AppleMusicApiResource,
 } from '../mappers/apple-music-json-mapper';
+import { AppleMusicErrorCode } from '../constants/apple-music-error-codes';
 import type { LibrarySearchType } from '../types/library-search';
+import { isAppleMusicError } from '../utils/apple-music-error';
 import * as errors from '../web/apple-music-errors';
 import type { AppleMusicRestTransport } from './apple-music-rest-transport';
 import { mapResourceArray, mapTopLevelResourceArray, parseDataArray } from './rest-json';
@@ -128,12 +130,24 @@ export class LibraryRestClient {
     };
   }
 
+  /**
+   * Lightweight library probe for subscription inference.
+   * Returns `false` only on HTTP 403 / subscription-or-permission denial.
+   * Network failures, missing tokens, and other API errors are rethrown.
+   */
   async probeLibraryAccess(musicUserToken: string): Promise<boolean> {
     try {
       await this.transport.getJson('/v1/me/library/songs', { limit: '1' }, musicUserToken);
       return true;
-    } catch {
-      return false;
+    } catch (error) {
+      if (
+        isAppleMusicError(error) &&
+        error.code === AppleMusicErrorCode.permissionDenied &&
+        error.message.includes('403')
+      ) {
+        return false;
+      }
+      throw error;
     }
   }
 
