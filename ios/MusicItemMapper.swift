@@ -63,6 +63,41 @@ enum MusicItemMapper {
     ]
   }
 
+  // MARK: - Personal recommendation
+
+  /// Bridge shape matches `RestJsonMapper.mapRecommendation`.
+  static func map(_ recommendation: MusicPersonalRecommendation) -> [String: Any] {
+    [
+      "id": musicItemId(recommendation.id),
+      "title": recommendation.title ?? "",
+      "resourceTypes": resourceTypes(from: recommendation),
+      "playlists": recommendation.playlists.map { map($0) },
+      "albums": recommendation.albums.map { map($0) },
+      "stations": recommendation.stations.map { map($0) },
+    ]
+  }
+
+  private static func resourceTypes(from recommendation: MusicPersonalRecommendation) -> [String] {
+    var types: [String] = []
+    for itemType in recommendation.types {
+      if itemType == Playlist.self {
+        types.append("playlists")
+      } else if itemType == Album.self {
+        types.append("albums")
+      } else if itemType == Station.self {
+        types.append("stations")
+      }
+    }
+    if !types.isEmpty {
+      return types
+    }
+    // Fallback when MusicKit omits `types` but collections are populated.
+    if !recommendation.playlists.isEmpty { types.append("playlists") }
+    if !recommendation.albums.isEmpty { types.append("albums") }
+    if !recommendation.stations.isEmpty { types.append("stations") }
+    return types
+  }
+
   // MARK: - Music Video
 
   @available(iOS 16.0, *)
