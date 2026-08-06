@@ -1,6 +1,7 @@
 import { WebAppleMusicApiClient } from './WebAppleMusicApiClient';
 import * as errors from './apple-music-errors';
 import { getMusic } from './MusicKitLoader';
+import { BridgeResponses } from '../bridge/bridge-responses';
 
 export class WebSubscriptionService {
   constructor(private readonly api = new WebAppleMusicApiClient()) {}
@@ -14,11 +15,11 @@ export class WebSubscriptionService {
     const libraryOk = await this.api.probeLibraryAccess(musicUserToken);
     const canPlay = libraryOk;
 
-    return {
+    return BridgeResponses.subscription({
       canPlayCatalogContent: canPlay,
       canBecomeSubscriber: false,
       hasCloudLibraryEnabled: libraryOk,
       isMusicCatalogSubscriptionEligible: false,
-    };
+    });
   }
 }

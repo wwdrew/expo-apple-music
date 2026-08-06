@@ -3,7 +3,7 @@ import Foundation
 @available(iOS 16.0, *)
 enum ExpoBridgePlayer {
   static func setPlaybackQueue(queueService: QueueService, itemId: String, type: String) async throws -> String {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       try await queueService.setQueue(itemId: itemId, type: type)
       return "Track(s) added to queue"
     }
@@ -14,16 +14,12 @@ enum ExpoBridgePlayer {
   ) async -> [String: Any] {
     let state = playbackController.state
     let songInfo = await playbackController.fetchCurrentSongInfo()
-
-    var result: [String: Any] = [
-      "playbackRate": state.playbackRate,
-      "playbackStatus": MusicItemMapper.describePlaybackStatus(state.playbackStatus),
-      "playbackTime": playbackController.playbackTime,
-    ]
-    if let songInfo = songInfo {
-      result["currentSong"] = songInfo
-    }
-    return result
+    return BridgeResponses.playbackState(
+      playbackRate: state.playbackRate,
+      playbackStatus: MusicItemMapper.describePlaybackStatus(state.playbackStatus),
+      playbackTime: playbackController.playbackTime,
+      currentSong: songInfo
+    )
   }
 
   static func playLibrarySong(
@@ -31,7 +27,7 @@ enum ExpoBridgePlayer {
     musicUserToken: String,
     songId: String
   ) async throws -> String {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       try await queueService.playLibrarySong(musicUserToken: musicUserToken, songId: songId)
       return "Library song added to queue"
     }
@@ -43,7 +39,7 @@ enum ExpoBridgePlayer {
     playlistId: String,
     startingAt: Int
   ) async throws -> String {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       try await queueService.playLibraryPlaylist(
         musicUserToken: musicUserToken,
         playlistId: playlistId,

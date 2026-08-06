@@ -13,7 +13,7 @@ The **bridge contract** is the set of plain objects returned to JavaScript (`Son
 
 Field rules: [PLATFORM_IMPLEMENTATION.md](./PLATFORM_IMPLEMENTATION.md#bridge-contract-parity-rules), [RESOURCE_IDS.md](./RESOURCE_IDS.md).
 
-**Expo bridge method names** (native `MusicModule.*` ↔ public `Auth` / `Catalog` / …): `src/bridge/bridge-methods.ts`. List endpoints register via domain bridge modules (`ios/bridge/`, `android/.../bridge/`, `src/bridge/handlers/`). Response envelope keys: `BridgeResponses` on each platform.
+**Expo bridge method names** (native `MusicModule.*` ↔ public `Auth` / `Catalog` / …): `src/bridge/bridge-methods.ts`. List endpoints register via domain bridge modules (`ios/bridge/`, `android/.../bridge/`, `src/bridge/handlers/`). Response envelope keys: `BridgeResponses` on each platform. The example playground method list is derived from `BRIDGE_METHODS` in `example/catalog/apiCatalog.ts`.
 
 ---
 

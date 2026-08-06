@@ -4,6 +4,35 @@ package expo.modules.applemusic
 internal object BridgeResponses {
   fun storefront(id: String): Map<String, Any?> = mapOf("id" to id)
 
+  fun authorization(status: String, musicUserToken: String?): Map<String, Any?> =
+    mapOf("status" to status, "musicUserToken" to musicUserToken)
+
+  fun subscription(
+    canPlayCatalogContent: Boolean,
+    canBecomeSubscriber: Boolean,
+    hasCloudLibraryEnabled: Boolean,
+    isMusicCatalogSubscriptionEligible: Boolean,
+  ): Map<String, Any?> =
+    mapOf(
+      "canPlayCatalogContent" to canPlayCatalogContent,
+      "canBecomeSubscriber" to canBecomeSubscriber,
+      "hasCloudLibraryEnabled" to hasCloudLibraryEnabled,
+      "isMusicCatalogSubscriptionEligible" to isMusicCatalogSubscriptionEligible,
+    )
+
+  fun playbackState(
+    playbackRate: Double,
+    playbackStatus: String,
+    playbackTime: Double,
+    currentSong: Map<String, Any?>?,
+  ): Map<String, Any?> =
+    buildMap {
+      put("playbackRate", playbackRate)
+      put("playbackStatus", playbackStatus)
+      put("playbackTime", playbackTime)
+      if (currentSong != null) put("currentSong", currentSong)
+    }
+
   fun catalogSearch(result: AndroidCatalogService.SearchResult): Map<String, Any?> =
     mapOf(
       "songs" to result.songs,

@@ -30,6 +30,8 @@ How each **public JS method** is implemented on iOS vs Android. The TypeScript A
 
 ## Catalog
 
+**Architecture:** Catalog ID resolution and native/REST fallback stay in `CatalogService` / `CatalogSearchStoreFactory`. Do not add fetch or resolution branches in `ExpoAppleMusicModule`, the module definition, or `ExpoBridgeCatalog` — those layers only register bridges and map envelopes.
+
 | JS API | iOS | Android |
 |--------|-----|---------|
 | `Catalog.search()` | **Native** `MusicCatalogSearchRequest` first; **REST** fallback only when native auto-token fails and a developer JWT is stored | REST search |

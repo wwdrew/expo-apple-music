@@ -3,39 +3,27 @@ import Foundation
 @available(iOS 16.0, *)
 enum ExpoBridgeCatalog {
   static func getCatalogSong(service: CatalogService, id: String) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
-      try await service.getSong(id: id)
-    }
+    try await ExpoBridge.asyncBridge { try await service.getSong(id: id) }
   }
 
   static func getCatalogAlbum(service: CatalogService, id: String) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
-      try await service.getAlbum(id: id)
-    }
+    try await ExpoBridge.asyncBridge { try await service.getAlbum(id: id) }
   }
 
   static func getCatalogArtist(service: CatalogService, id: String) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
-      try await service.getArtist(id: id)
-    }
+    try await ExpoBridge.asyncBridge { try await service.getArtist(id: id) }
   }
 
   static func getCatalogPlaylist(service: CatalogService, id: String) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
-      try await service.getPlaylist(id: id)
-    }
+    try await ExpoBridge.asyncBridge { try await service.getPlaylist(id: id) }
   }
 
   static func getCatalogStation(service: CatalogService, id: String) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
-      try await service.getStation(id: id)
-    }
+    try await ExpoBridge.asyncBridge { try await service.getStation(id: id) }
   }
 
   static func getCatalogMusicVideo(service: CatalogService, id: String) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
-      try await service.getMusicVideo(id: id)
-    }
+    try await ExpoBridge.asyncBridge { try await service.getMusicVideo(id: id) }
   }
 
   static func catalogSearch(
@@ -44,7 +32,7 @@ enum ExpoBridgeCatalog {
     types: [String],
     options: NSDictionary
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let pagination = BridgePagination(from: options)
       let searchOptions = CatalogService.SearchOptions(limit: pagination.limit, offset: pagination.offset)
       let result = try await service.search(term: term, types: types, options: searchOptions)
@@ -57,7 +45,7 @@ enum ExpoBridgeCatalog {
     albumId: String,
     options: NSDictionary
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let pagination = BridgePagination(from: options)
       let searchOptions = CatalogService.SearchOptions(limit: pagination.limit, offset: pagination.offset)
       let songs = try await service.getAlbumTracks(albumId: albumId, options: searchOptions)
@@ -70,7 +58,7 @@ enum ExpoBridgeCatalog {
     artistId: String,
     options: NSDictionary
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let pagination = BridgePagination(from: options)
       let searchOptions = CatalogService.SearchOptions(limit: pagination.limit, offset: pagination.offset)
       let albums = try await service.getArtistAlbums(artistId: artistId, options: searchOptions)
@@ -83,7 +71,7 @@ enum ExpoBridgeCatalog {
     playlistId: String,
     options: NSDictionary
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let pagination = BridgePagination(from: options)
       let searchOptions = CatalogService.SearchOptions(limit: pagination.limit, offset: pagination.offset)
       let songs = try await service.getPlaylistTracks(playlistId: playlistId, options: searchOptions)
@@ -96,7 +84,7 @@ enum ExpoBridgeCatalog {
     types: [String],
     options: [String: Any]
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let pagination = BridgePagination(from: options as NSDictionary)
       let searchOptions = CatalogService.SearchOptions(limit: pagination.limit, offset: pagination.offset)
       let genre = options["genre"] as? String
@@ -111,7 +99,7 @@ enum ExpoBridgeCatalog {
     type: String,
     ids: [String]
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let items = try await service.getResources(type: type, ids: ids)
       switch type {
       case "songs":

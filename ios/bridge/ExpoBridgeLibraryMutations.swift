@@ -7,7 +7,7 @@ enum ExpoBridgeLibraryMutations {
     musicUserToken: String,
     resourceIds: [String: [String]]
   ) async throws {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       try await service.addToLibrary(musicUserToken: musicUserToken, resourceIds: resourceIds)
     }
   }
@@ -17,7 +17,7 @@ enum ExpoBridgeLibraryMutations {
     musicUserToken: String,
     options: [String: Any]
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let name = options["name"] as? String ?? ""
       let description = options["description"] as? String
       let isPublic = options["isPublic"] as? Bool ?? false
@@ -38,7 +38,7 @@ enum ExpoBridgeLibraryMutations {
     playlistId: String,
     tracks: [[String: String]]
   ) async throws {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       try await service.addTracksToPlaylist(
         musicUserToken: musicUserToken,
         playlistId: playlistId,

@@ -8,7 +8,7 @@ enum ExpoBridgeRatings {
     resourceType: String,
     id: String
   ) async throws -> [String: Any]? {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       try await service.getRating(musicUserToken: musicUserToken, resourceType: resourceType, id: id)
     }
   }
@@ -20,7 +20,7 @@ enum ExpoBridgeRatings {
     id: String,
     value: Int
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       try await service.setRating(
         musicUserToken: musicUserToken, resourceType: resourceType, id: id, value: value)
     }
@@ -32,7 +32,7 @@ enum ExpoBridgeRatings {
     resourceType: String,
     id: String
   ) async throws {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       try await service.clearRating(
         musicUserToken: musicUserToken, resourceType: resourceType, id: id)
     }
@@ -43,7 +43,7 @@ enum ExpoBridgeRatings {
     musicUserToken: String,
     resourceIds: [String: [String]]
   ) async throws {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       try await service.addToFavorites(musicUserToken: musicUserToken, resourceIds: resourceIds)
     }
   }
@@ -53,7 +53,7 @@ enum ExpoBridgeRatings {
     musicUserToken: String,
     resourceIds: [String: [String]]
   ) async throws {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       try await service.removeFromFavorites(musicUserToken: musicUserToken, resourceIds: resourceIds)
     }
   }

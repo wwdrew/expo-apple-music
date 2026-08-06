@@ -7,7 +7,7 @@ enum ExpoBridgeLibrary {
     musicUserToken: String,
     options: NSDictionary
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let pagination = BridgePagination(from: options)
       let playlists = try await service.getPlaylists(musicUserToken: musicUserToken, options: pagination)
       return BridgeResponses.playlists(playlists)
@@ -19,7 +19,7 @@ enum ExpoBridgeLibrary {
     musicUserToken: String,
     options: NSDictionary
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let pagination = BridgePagination(from: options)
       let songs = try await service.getSongs(musicUserToken: musicUserToken, options: pagination)
       return BridgeResponses.songs(songs)
@@ -31,7 +31,7 @@ enum ExpoBridgeLibrary {
     musicUserToken: String,
     playlistId: String
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let songs = try await service.getPlaylistSongs(musicUserToken: musicUserToken, playlistId: playlistId)
       return BridgeResponses.songs(songs)
     }
@@ -42,7 +42,7 @@ enum ExpoBridgeLibrary {
     musicUserToken: String,
     options: NSDictionary
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let pagination = BridgePagination(from: options)
       let artists = try await service.getArtists(musicUserToken: musicUserToken, options: pagination)
       return BridgeResponses.artists(artists)
@@ -54,7 +54,7 @@ enum ExpoBridgeLibrary {
     musicUserToken: String,
     options: NSDictionary
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let pagination = BridgePagination(from: options)
       let albums = try await service.getAlbums(musicUserToken: musicUserToken, options: pagination)
       return BridgeResponses.albums(albums)
@@ -66,7 +66,7 @@ enum ExpoBridgeLibrary {
     musicUserToken: String,
     options: NSDictionary
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let pagination = BridgePagination(from: options)
       let musicVideos = try await service.getMusicVideos(musicUserToken: musicUserToken, options: pagination)
       return BridgeResponses.musicVideos(musicVideos)
@@ -80,7 +80,7 @@ enum ExpoBridgeLibrary {
     types: [String],
     options: NSDictionary
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let pagination = BridgePagination(from: options)
       let result = try await service.search(
         musicUserToken: musicUserToken,

@@ -56,14 +56,6 @@ final class SubscriptionService {
     let hasCloudLibraryEnabled: Bool
     let isMusicCatalogSubscriptionEligible: Bool
 
-    func toDictionary() -> [String: Any] {
-      [
-        "canPlayCatalogContent": canPlayCatalogContent,
-        "canBecomeSubscriber": canBecomeSubscriber,
-        "hasCloudLibraryEnabled": hasCloudLibraryEnabled,
-        "isMusicCatalogSubscriptionEligible": isMusicCatalogSubscriptionEligible,
-      ]
-    }
   }
 
   func checkSubscription() async throws -> SubscriptionDetails {

@@ -7,7 +7,7 @@ enum ExpoBridgeRecommendations {
     musicUserToken: String,
     ids: [String]?
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let recommendations = try await service.getRecommendations(
         musicUserToken: musicUserToken,
         ids: ids)
@@ -20,7 +20,7 @@ enum ExpoBridgeRecommendations {
     musicUserToken: String,
     year: Int?
   ) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let summaries = try await service.getReplay(musicUserToken: musicUserToken, year: year)
       return BridgeResponses.replaySummaries(summaries)
     }

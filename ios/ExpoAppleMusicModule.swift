@@ -35,15 +35,15 @@ public class ExpoAppleMusicModule: Module {
 extension ExpoAppleMusicModule: PlaybackObserverDelegate {
   @MainActor
   func playbackStateDidChange(_ state: PlaybackObserver.PlaybackInfo) {
-    var body: [String: Any] = [
-      "playbackRate": state.playbackRate,
-      "playbackStatus": state.playbackStatus,
-      "playbackTime": state.playbackTime,
-    ]
-    if let song = state.currentSong {
-      body["currentSong"] = song
-    }
-    sendEvent("onPlaybackStateChange", body)
+    sendEvent(
+      "onPlaybackStateChange",
+      BridgeResponses.playbackState(
+        playbackRate: Double(state.playbackRate),
+        playbackStatus: state.playbackStatus,
+        playbackTime: state.playbackTime,
+        currentSong: state.currentSong
+      )
+    )
   }
 
   @MainActor

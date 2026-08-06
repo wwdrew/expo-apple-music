@@ -17,27 +17,23 @@ enum ExpoBridgeAuth {
     if status == .authorized, let token = developerToken, !token.isEmpty {
       musicUserToken = await subscriptionService.fetchMusicUserToken(developerToken: token)
     }
-    return ["status": status.rawValue, "musicUserToken": musicUserToken]
+    return BridgeResponses.authorization(status: status.rawValue, musicUserToken: musicUserToken)
   }
 
   static func checkSubscription(subscriptionService: SubscriptionService) async throws -> [String: Any] {
-    do {
+    try await ExpoBridge.asyncBridge {
       let details = try await subscriptionService.checkSubscription()
-      return details.toDictionary()
-    } catch {
-      if let subError = SubscriptionService.wrapSubscriptionError(error) {
-        throw Exception(
-          name: subError.code,
-          description: subError.message,
-          code: subError.code
-        )
-      }
-      throw AppleMusicBridgeError.exception(from: error)
+      return BridgeResponses.subscription(
+        canPlayCatalogContent: details.canPlayCatalogContent,
+        canBecomeSubscriber: details.canBecomeSubscriber,
+        hasCloudLibraryEnabled: details.hasCloudLibraryEnabled,
+        isMusicCatalogSubscriptionEligible: details.isMusicCatalogSubscriptionEligible
+      )
     }
   }
 
   static func getStorefront(musicUserToken: String) async throws -> [String: Any] {
-    try await AppleMusicBridgeError.rethrow {
+    try await ExpoBridge.asyncBridge {
       let id = try await StorefrontService.getStorefrontId(musicUserToken: musicUserToken)
       return BridgeResponses.storefront(id: id)
     }
