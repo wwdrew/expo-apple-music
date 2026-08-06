@@ -26,3 +26,19 @@ jobs:
       - uses: actions/checkout@v5
       - name: RestJsonMapper bridge-contract fixtures
         run: yarn test:ios-bridge
+
+  android-bridge-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - name: AppleMusicJsonMapper bridge-contract fixtures (JVM, no AARs)
+        run: yarn test:android-bridge

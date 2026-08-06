@@ -48,9 +48,10 @@ internal object AppleMusicJsonMapper {
     return mapOf(
       "id" to resource.optString("id", ""),
       "name" to attributes.optString("name", ""),
-      "description" to (attributes.optString("description", "").ifEmpty {
-        attributes.optJSONObject("description")?.optString("standard", "") ?: ""
-      }),
+      "description" to (
+        attributes.optJSONObject("description")?.optString("standard", "")
+          ?: attributes.optString("description", "")
+      ),
       "artworkUrl" to artworkUrl(attributes.optJSONObject("artwork")),
       "trackCount" to trackCount,
     )
@@ -102,15 +103,6 @@ internal object AppleMusicJsonMapper {
       "duration" to durationMillis(attributes),
     )
   }
-
-  fun mapPlayerMediaItem(item: com.apple.android.music.playback.model.PlayerMediaItem): Map<String, Any?> =
-    mapOf(
-      "id" to item.subscriptionStoreId.orEmpty().ifEmpty { item.a().orEmpty() },
-      "title" to item.title.orEmpty(),
-      "artistName" to item.artistName.orEmpty(),
-      "artworkUrl" to (item.getArtworkUrl(200, 200) ?: ""),
-      "duration" to (item.duration / 1000).toString(),
-    )
 
   /** Maps ratings API envelope (`data[0].attributes.value`). */
   fun mapRating(json: JSONObject): Map<String, Any?>? {
@@ -223,14 +215,6 @@ internal object AppleMusicJsonMapper {
       }
     }
   }
-
-  fun describePlaybackStatus(state: Int): String =
-    when (state) {
-      com.apple.android.music.playback.model.PlaybackState.PLAYING -> "playing"
-      com.apple.android.music.playback.model.PlaybackState.PAUSED -> "paused"
-      com.apple.android.music.playback.model.PlaybackState.STOPPED -> "stopped"
-      else -> "unknown"
-    }
 
   private fun durationMillis(attributes: JSONObject): Long {
     return when {

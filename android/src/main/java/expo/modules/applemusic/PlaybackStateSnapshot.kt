@@ -30,7 +30,7 @@ internal class PlaybackStateSnapshot {
       return idlePlaybackState()
     }
     val player = controller ?: ensureController()
-    val playbackStatus = AppleMusicJsonMapper.describePlaybackStatus(player.playbackState)
+    val playbackStatus = AppleMusicPlayerItemMapper.describePlaybackStatus(player.playbackState)
     val playbackTime = player.currentPosition.coerceAtLeast(0) / 1000.0
     return BridgeResponses.playbackState(
       playbackRate = player.playbackRate.toDouble(),
@@ -52,7 +52,7 @@ internal class PlaybackStateSnapshot {
         ?: item.playbackStoreId.takeIf { it.isNotEmpty() }
 
     if (currentId == null) {
-      val fallback = AppleMusicJsonMapper.mapPlayerMediaItem(item)
+      val fallback = AppleMusicPlayerItemMapper.mapPlayerMediaItem(item)
       return fallback.takeIf { (it["title"] as? String)?.isNotEmpty() == true } ?: cachedSongInfo
     }
 
@@ -60,7 +60,7 @@ internal class PlaybackStateSnapshot {
       return cachedSongInfo
     }
 
-    val songInfo = AppleMusicJsonMapper.mapPlayerMediaItem(item)
+    val songInfo = AppleMusicPlayerItemMapper.mapPlayerMediaItem(item)
     cachedSongId = currentId
     cachedSongInfo = songInfo
     return songInfo

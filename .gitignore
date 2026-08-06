@@ -40,6 +40,7 @@ android.iml
 android/app/libs
 android/build/
 android/.gradle/
+android/bridge-contract-jvm/**/build/
 android/keystores/debug.keystore
 
 # Cocoapods

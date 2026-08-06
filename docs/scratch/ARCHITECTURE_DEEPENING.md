@@ -37,7 +37,7 @@ Fixture-driven bridge mapping as one deep module: golden JSON → expected bridg
 
 **Notes**
 
-- 2026-05-20: `docs/BRIDGE_CONTRACT.md`, `fixtures/expected/`, `bridge-contract.test.ts`, `BridgeContractTest.kt`, `mapRating` consolidated in TS/Kotlin; `yarn sync:fixtures`.
+- 2026-08-06: CI runs `yarn test:android-bridge` — JVM Gradle project at `android/bridge-contract-jvm` compiles only `AppleMusicJsonMapper.kt` (no MusicKit AARs). Player AAR mapping lives in `AppleMusicPlayerItemMapper.kt`.
 
 ---
 
