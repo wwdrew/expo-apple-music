@@ -129,6 +129,6 @@ On **Android**, catalog `setQueue` requires a music user token in the native ses
 |------|------|
 | Recent played containers | Apple caps some `/v1/me/recent/*` responses (e.g. ~10 items on resources); iOS and Android both use REST |
 | `Auth.checkSubscription()` | Android infers flags; iOS uses MusicKit subscription APIs |
-| Catalog station queue | iOS native ✅; Android playback AAR ❌ |
+| Catalog station queue | iOS native ✅; Android playback AAR ➖ permanent (`UNSUPPORTED_PLATFORM`); web ⚠️ |
 | `Player.configurePlayer` | iOS: real backend + AVAudioSession; Android/web: stub payload + `supportedFeatures` all false ([PLAYBACK.md](./PLAYBACK.md)) |
 | REST on iOS without dev JWT | GET may use `MusicDataRequest` fallback; **writes** require stored tokens |

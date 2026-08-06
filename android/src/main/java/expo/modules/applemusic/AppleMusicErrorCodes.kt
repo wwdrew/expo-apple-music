@@ -10,4 +10,6 @@ internal object AppleMusicErrorCodes {
   const val MISSING_DEVELOPER_TOKEN = "MISSING_DEVELOPER_TOKEN"
   const val MISSING_MUSIC_USER_TOKEN = "MISSING_MUSIC_USER_TOKEN"
   const val PLAYBACK_ERROR = "PLAYBACK_ERROR"
+  /** Capability permanently unavailable on this platform (e.g. Android station queue). */
+  const val UNSUPPORTED_PLATFORM = "UNSUPPORTED_PLATFORM"
 }

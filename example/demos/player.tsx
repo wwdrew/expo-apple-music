@@ -58,7 +58,7 @@ export function SetQueueDemo() {
 
   return (
     <ApiScreen
-      hint="Catalog ids only. Station queues work on iOS/web; Android throws until radio is supported. Call Player.play() after queueing unless you use Queue + play."
+      hint="Catalog ids only. Station queues work on iOS/web; Android permanently rejects them (UNSUPPORTED_PLATFORM). Call Player.play() after queueing unless you use Queue + play."
       headerExtra={
         <>
           <IdField label="Song id" value={songId} onChangeText={setSongId} />

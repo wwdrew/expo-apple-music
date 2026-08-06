@@ -91,7 +91,7 @@ See [RECOMMENDATIONS.md](./RECOMMENDATIONS.md). Heavy rotation is under History,
 | Queue catalog / library | `Player.setQueue()` | ✅ | ✅ | ⚠️ |
 | Configure backend / session | `Player.configurePlayer()` | ✅ | ⚠️ stub | ⚠️ stub |
 | Transport + state + hooks | `Player.*` | ✅ | ✅ | ⚠️ |
-| Catalog station queue | | ✅ | ➖ | ⚠️ |
+| Catalog station queue | | ✅ | ➖ permanent | ⚠️ |
 
 Default backend is **`application`** (in-app). Prefer `{ player: 'system' }` only for Music-app / system playback on iOS. Prefer `{ mixWithOthers: true }` for mixing. Details: [PLAYBACK.md](./PLAYBACK.md).
 

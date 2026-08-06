@@ -146,7 +146,7 @@ const METHOD_UI: Record<string, MethodUi> = {
   "Player.setQueue": {
     signature: "Player.setQueue(itemId, type)",
     summary:
-      "Queue a catalog song, album, playlist, or station (station unsupported on Android).",
+      "Queue a catalog song, album, playlist, or station (station permanently unsupported on Android).",
   },
   "Player.playLibrarySong": {
     signature: "Player.playLibrarySong(musicUserToken, songId)",

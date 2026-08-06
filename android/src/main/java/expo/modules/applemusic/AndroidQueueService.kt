@@ -31,7 +31,10 @@ internal class AndroidQueueService(
         PlaybackQueueRules.MediaType.ALBUM -> playback.buildAlbumProvider(itemId)
         PlaybackQueueRules.MediaType.PLAYLIST -> playback.buildPlaylistProvider(itemId)
         PlaybackQueueRules.MediaType.STATION ->
-          throw AppleMusicErrors.apiError(PlaybackQueueRules.STATION_UNSUPPORTED_ON_ANDROID)
+          throw AppleMusicErrors.apiError(
+            PlaybackQueueRules.STATION_UNSUPPORTED_ON_ANDROID,
+            AppleMusicErrorCodes.UNSUPPORTED_PLATFORM,
+          )
       }
     playback.clearSongCache()
     playback.prepareQueue(provider)

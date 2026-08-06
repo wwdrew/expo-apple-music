@@ -16,6 +16,7 @@ Stable `code` strings on bridge rejections (`AppleMusicError.code`). Use `getErr
 | `MISSING_MUSIC_USER_TOKEN` | User-scoped API without `musicUserToken` | ✅ | ✅ | ✅ |
 | `INVALID_LIBRARY_ID` | Catalog id passed to library playback/helpers | ✅ (TS pre-check) | ✅ (TS pre-check) | ✅ (TS pre-check) |
 | `PLAYBACK_ERROR` | Queue / transport failure | Events (`onPlaybackError`) | ✅ | — |
+| `UNSUPPORTED_PLATFORM` | Capability permanently unavailable (Android catalog **station** queue) | — | ✅ | — |
 
 ---
 
@@ -56,9 +57,10 @@ These stay on `ERROR` so existing apps keep working; match on `message` if neede
 |-----------------|--------|
 | `*not found in catalog*` / `*not found in library*` | `itemNotFound` |
 | `Unknown media type:` | Invalid `Player.setQueue` type |
-| `Station playback is not supported on Android` | Documented ❌ |
 | `Apple Music API response missing "data"` | Invalid REST shape (hardening) |
 | `Invalid MusicKit API response` | Web envelope parse failure |
+
+Android catalog station queue uses code **`UNSUPPORTED_PLATFORM`** with message `Station playback is not supported on Android.` (permanent — MusicKit Android playback AAR has no radio).
 
 ---
 

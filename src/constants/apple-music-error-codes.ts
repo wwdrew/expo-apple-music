@@ -17,6 +17,8 @@ export const AppleMusicErrorCode = {
   invalidLibraryId: 'INVALID_LIBRARY_ID',
   /** Native playback queue / transport failure (Android; iOS playback events). */
   playbackError: 'PLAYBACK_ERROR',
+  /** Capability permanently unavailable on this platform (e.g. Android station queue). */
+  unsupportedPlatform: 'UNSUPPORTED_PLATFORM',
 } as const;
 
 export type AppleMusicErrorCode =

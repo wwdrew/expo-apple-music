@@ -20,5 +20,5 @@ internal object PlaybackQueueRules {
     "Library queue requires a music user token. Use Player.playLibrarySong or playLibraryPlaylist."
 
   const val STATION_UNSUPPORTED_ON_ANDROID =
-    "Station playback is not supported on Android yet."
+    "Station playback is not supported on Android."
 }

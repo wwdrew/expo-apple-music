@@ -8,5 +8,6 @@ describe('AppleMusicErrorCode', () => {
     expect(AppleMusicErrorCode.missingDeveloperToken).toBe('MISSING_DEVELOPER_TOKEN');
     expect(AppleMusicErrorCode.invalidLibraryId).toBe('INVALID_LIBRARY_ID');
     expect(AppleMusicErrorCode.playbackError).toBe('PLAYBACK_ERROR');
+    expect(AppleMusicErrorCode.unsupportedPlatform).toBe('UNSUPPORTED_PLATFORM');
   });
 });

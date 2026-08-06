@@ -98,4 +98,12 @@ Invalid category/mode/option strings throw on iOS. Audio session is applied **be
 | **iOS** | Full backend switch + `AVAudioSession` |
 | **Android / web** | Echo a normalized `PlayerConfig` (stub). Mixing, session category, and system-player semantics are **not** applied — only iOS runs `AVAudioSession` / `SystemMusicPlayer`. Check `supportedFeatures` on stubs; `mixWithOthers` in the return is always `false`. |
 
+### Catalog station queue
+
+| Platform | Support |
+| -------- | ------- |
+| **iOS** | ✅ Native MusicKit |
+| **Web** | ⚠️ MusicKit JS `station` queue (soak-verify) |
+| **Android** | ➖ **Permanent** — playback AAR has no radio; `Player.setQueue(..., 'station')` rejects with `UNSUPPORTED_PLATFORM` |
+
 See also: [PLATFORM_IMPLEMENTATION.md](./PLATFORM_IMPLEMENTATION.md), [WEB_IMPLEMENTATION.md](./WEB_IMPLEMENTATION.md), [ANDROID_PLAYBACK.md](./ANDROID_PLAYBACK.md).
