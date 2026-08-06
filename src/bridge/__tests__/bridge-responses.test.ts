@@ -47,6 +47,17 @@ describe('BridgeResponses', () => {
       playbackTime: 12,
       currentSong: { id: '1' },
     });
+    expect(
+      BridgeResponses.playbackState({
+        playbackRate: 0,
+        playbackStatus: 'paused',
+        playbackTime: 0,
+      }),
+    ).toEqual({
+      playbackRate: 0,
+      playbackStatus: 'paused',
+      playbackTime: 0,
+    });
   });
 });
 

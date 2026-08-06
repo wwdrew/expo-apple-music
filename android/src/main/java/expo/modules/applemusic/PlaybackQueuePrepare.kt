@@ -120,7 +120,7 @@ internal object PlaybackQueuePrepare {
           }
 
         continuation.invokeOnCancellation {
-          player.removeListener(prepareListener)
+          mainHandler.post { player.removeListener(prepareListener) }
           mainHandler.removeCallbacks(timeoutRunnable)
         }
 

@@ -16,13 +16,13 @@ internal object PlaybackErrorMapper {
         )
       else -> {
         val message = error.message.orEmpty()
-        val hint =
+        val mappedMessage =
           if (error is java.io.FileNotFoundException && message.contains("api.music.apple.com")) {
             "Apple Music API rejected the request (often an expired session). Call Auth.authorize(developerToken) again."
           } else {
             error.message ?: "Playback failed"
           }
-        CodedException(AppleMusicErrorCodes.PLAYBACK_ERROR, hint, null)
+        CodedException(AppleMusicErrorCodes.PLAYBACK_ERROR, mappedMessage, error)
       }
     }
 }

@@ -49,7 +49,7 @@ internal class PlaybackStateSnapshot {
 
     val currentId =
       item.subscriptionStoreId?.takeIf { it.isNotEmpty() }
-        ?: item.a()?.takeIf { !it.isNullOrEmpty() }
+        ?: item.playbackStoreId.takeIf { it.isNotEmpty() }
 
     if (currentId == null) {
       val fallback = AppleMusicJsonMapper.mapPlayerMediaItem(item)
