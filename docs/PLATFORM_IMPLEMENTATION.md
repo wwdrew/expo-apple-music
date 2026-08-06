@@ -78,7 +78,7 @@ All history methods use **REST** on iOS (`HistoryService` → `AppleMusicRestCli
 
 | JS API | iOS | Android |
 |--------|-----|---------|
-| `Recommendations.get()` (no ids) | **Native** `MusicPersonalRecommendationsRequest` | REST `GET /v1/me/recommendations` |
+| `Recommendations.get()` (no ids) | REST `GET /v1/me/recommendations` | REST `GET /v1/me/recommendations` |
 | `Recommendations.get({ ids })` | REST | REST |
 | `Recommendations.getReplay()` | REST `GET /v1/me/music-summaries` | REST |
 

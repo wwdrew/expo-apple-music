@@ -111,17 +111,20 @@ Transport controls and events — used after something is queued; not “search�
 
 ## Platform implementation (high level)
 
-**iOS:** MusicKit native when possible; REST only for gaps (writes, charts, some history). **Android:** REST for data; MusicKit AAR for auth/playback.
+**iOS policy:** Prefer **MusicKit native** whenever it can do the job (Auth, Catalog search/get, Playback, library **playback** queue resolution). Use **REST** only for gaps — writes, charts, relationships, and reads where MusicKit cannot match Android/web pagination (`limit`/`offset`). **Android:** REST for data; MusicKit AAR for auth/playback. **Web:** MusicKit JS for Auth/Playback; shared TS REST stack for data.
 
 Full per-method matrix: **[docs/PLATFORM_IMPLEMENTATION.md](./docs/PLATFORM_IMPLEMENTATION.md)**. Resource ID rules: **[docs/RESOURCE_IDS.md](./docs/RESOURCE_IDS.md)**.
 
-| Capability            | iOS (current)                         | Android (target)                                                   |
-| --------------------- | ------------------------------------- | ------------------------------------------------------------------ |
-| Auth                  | `SKCloudServiceController` + MusicKit | MusicKit **Authentication** SDK (intent → Apple Music app)         |
-| **Library** read APIs | Native MusicKit requests              | **Apple Music REST API** (`/v1/me/library/...`) + music user token |
-| **Catalog** search    | Native `MusicCatalogSearchRequest`    | **Apple Music REST API** (`/v1/catalog/{storefront}/search`)       |
-| Catalog playback      | Native player                         | `MediaPlayerController` + `CatalogPlaybackQueueItemProvider`       |
-| Library playback      | Native player queue                   | REST ID resolve + playback AAR                                     |
+| Capability            | iOS (current)                                      | Android                                                    |
+| --------------------- | -------------------------------------------------- | ---------------------------------------------------------- |
+| Auth                  | `SKCloudServiceController` + MusicKit              | MusicKit **Authentication** SDK (intent → Apple Music app) |
+| **Library** read APIs | **REST** `/v1/me/library/...` (pagination parity); native `MusicLibraryRequest` only for **playback** ID resolve | **Apple Music REST API** + music user token |
+| **Catalog** search / get | Native MusicKit first; REST fallback / relationships / charts | **Apple Music REST API** |
+| **History**           | REST `/v1/me/recent/*`, heavy-rotation, recently-added | REST |
+| **Recommendations**   | REST `/v1/me/recommendations`, Replay summaries    | REST |
+| Catalog playback      | Native player                                      | `MediaPlayerController` + catalog queue provider           |
+| Library playback      | Native player queue                                | REST ID resolve + playback AAR                             |
+
 
 Android requires a **developer token** at `authorize()`; iOS needs it for REST writes and gap-fill reads (stored with music user token after authorize).
 

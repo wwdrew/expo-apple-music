@@ -76,7 +76,7 @@ Living checklist for `@wwdrew/expo-apple-music` vs the [Apple Music API](https:/
 
 | Capability | JS API | iOS | Android | Web |
 |------------|--------|-----|---------|-----|
-| Personal recommendations | `Recommendations.get()` | ✅ native (+ REST if `ids`) | ✅ REST | ✅ REST |
+| Personal recommendations | `Recommendations.get()` | ✅ REST | ✅ REST | ✅ REST |
 | Replay summaries | `Recommendations.getReplay()` | ✅ REST | ✅ REST | ✅ REST |
 | Heavy rotation | `History.getHeavyRotation()` | ✅ | ✅ | ✅ |
 

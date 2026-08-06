@@ -275,3 +275,26 @@ Web **Catalog** / **Library** / **History** call shared TS REST **adapter** (And
 | 2026-05-20 | 2 | JS domain depth: `src/api/` pagination + `callNative` + library id validation; modules wired |
 | 2026-05-20 | 5 | History seam: native History services; bridge `getRecentlyPlayedResources`; REST recently-added on History client |
 | 2026-05-20 | 7 | Domain-grouped Expo bridge: manifest, envelopes, per-domain register/handlers on iOS/Android/Web |
+| 2026-08-06 | P2 | Docs/CONTEXT refresh: Library/History/Recommendations match PLATFORM matrix; native-first Catalog/Auth/Playback restated |
+
+---
+
+## Post-epic backlog (2026-08-06)
+
+Recorded after code-quality epic (#1–#11) closed. **Constraint (maintainer):** on **iOS**, prefer **native MusicKit** whenever it can do the job; use **REST only for gaps** (writes, charts, pagination parity where MusicKit cannot match, etc.). Do **not** deepen by routing more Catalog/Auth/Playback through REST “for parity.” Android/Web remain REST-for-data + native/MKJS for Auth/Playback.
+
+Clarification: the epic’s last PRs did **not** convert native → REST. `#33` was structure (playback split, BridgeResponses, asyncBridge, apiCatalog). `#29`/`#30` only **documented** existing Library/History REST reads. Earlier `643eced` had already made Library list/search REST-only for pagination parity — revisit only if product wants native Library reads again.
+
+| # | Opportunity | Notes |
+| - | ----------- | ----- |
+| P1 | **Playback** deep module + tests | Highest risk; station gap on Android; web soak QA. Keep native adapters. |
+| P2 | **Docs / CONTEXT refresh** | CONTEXT still says Library reads = Native MusicKit — wrong vs PLATFORM matrix. Fix navigability; do not change transport while “fixing” docs. |
+| P3 | **CI: Android unit tests** | Kotlin bridge-contract fixtures exist; not in CI. |
+| P4 | Delete shallow Android `*Service` / web façades | Pass-through cleanup only — no transport change. |
+| P5 | Split remaining iOS `CatalogService` | Structure only; keep MusicKit get-by-id / native-first search. |
+| P6 | MusicItemMapper fixture parity | Prefer golden tests for native→bridge — **not** “shrink MusicItemMapper by moving Catalog get to REST.” |
+| P7 | `BRIDGE_METHODS` ↔ registration parity | Parity test / thin codegen; no REST implication. |
+| P8 | Auth `checkSubscription` honesty | Android/web probe swallows errors; deepen outcomes — keep iOS MusicKit subscription. |
+| P9 | Example Auth/Playback DX | Readiness panel + soak checklist. |
+
+**Rejected / do-not-suggest without revisiting:** “Route more iOS Catalog get-by-id through REST to shrink MusicItemMapper.” Contradicts native-first preference.

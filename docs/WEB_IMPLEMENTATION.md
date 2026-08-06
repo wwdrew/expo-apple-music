@@ -1,8 +1,8 @@
-# Web — full API parity (implementation plan)
+# Web — MusicKit JS + shared REST (as-built)
 
-Single handoff to implement **every** public `ExpoAppleMusic` bridge method on **web** so the existing TypeScript API (`Auth`, `MusicKit`, `Player`, hooks) works unchanged in Expo web builds.
+Web implements the same public TypeScript API (`Auth`, `Catalog`, `Library`, `History`, `Player`, …) via MusicKit JS for **Auth** / **Playback** and the shared `src/rest/*` stack for data (same contract as Android).
 
-Read [CONTEXT.md](../CONTEXT.md), [docs/AUTH.md](./AUTH.md), and [docs/ANDROID_IMPLEMENTATION.md](./ANDROID_IMPLEMENTATION.md) — the Android REST table and JSON field names are the **web data contract** as well.
+Read [CONTEXT.md](../CONTEXT.md), [docs/AUTH.md](./AUTH.md), and [docs/ANDROID_IMPLEMENTATION.md](./ANDROID_IMPLEMENTATION.md) for the data contract. Historical implementation notes remain below for reference.
 
 ---
 
@@ -15,34 +15,32 @@ Read [CONTEXT.md](../CONTEXT.md), [docs/AUTH.md](./AUTH.md), and [docs/ANDROID_I
 | **Apple SDK** | [MusicKit on the Web](https://developer.apple.com/documentation/musickitjs) (MusicKit JS v3, hosted script) |
 | **Not** | Raw `fetch('https://api.music.apple.com/...')` from app code without MusicKit JS (CORS, token handling, and Apple’s supported path) |
 
-**Crossover with Android:** Endpoint list, pagination, library ID rules (`l.`, `i.`, `p.`), and `AppleMusicJsonMapper.kt` → port to TypeScript. Android’s OkHttp client becomes MusicKit JS `music.api` (or equivalent) plus the same mappers on JSON `data[]` resources.
+**Crossover with Android:** Endpoint list, pagination, library ID rules (`l.`, `i.`, `p.`), and mappers (`src/mappers/apple-music-json-mapper.ts` ↔ `AppleMusicJsonMapper.kt`). Transport uses MusicKit JS `music.api` via `WebAppleMusicRestTransport`.
 
 ---
 
-## Architecture
+## Architecture (current)
 
-| Layer | iOS | Android | Web (target) |
-|-------|-----|---------|--------------|
-| JavaScript | `Auth` / `MusicKit` / `Player` / hooks | Unchanged | Unchanged |
-| Bridge | `ExpoAppleMusic` native module | Same module name | Same module name (`ExpoAppleMusic`) |
-| Implementation | Swift + MusicKit | Kotlin + REST + playback AAR | **TypeScript** + MusicKit JS |
-| Apple | OS frameworks | `api.music.apple.com` + AARs | MusicKit JS → Apple Music API + in-browser player |
+| Layer | iOS | Android | Web |
+|-------|-----|---------|-----|
+| JavaScript | Domain modules (`Auth`, `Catalog`, `Player`, …) + hooks | Same | Same |
+| Bridge | `ExpoAppleMusic` native module | Same module name | Same (`src/native-module.web.ts` + `src/bridge/handlers`) |
+| Data | MusicKit + REST gap-fill | REST + AARs | `src/rest/*` via MusicKit JS |
+| Auth / Playback | MusicKit / AVAudioSession | Auth + playback AARs | MusicKit JS |
 
 ```
-src/modules/*.ts          (no public API changes)
-src/native-module.ts      → requireNativeModule (ios/android)
-src/native-module.web.ts  → web module (Metro resolves .web.ts)
-web/
-  ExpoAppleMusicModule.ts       // bridge: all AsyncFunctions + events
-  MusicKitLoader.ts             // load v3 script once, configure()
-  WebCatalogService.ts          // catalogSearch
-  WebLibraryService.ts          // library reads
-  WebQueueService.ts            // setPlaybackQueue, playLibrary*
-  WebPlaybackController.ts      // play/pause/skip/seek, getCurrentState
-  WebPlaybackObserver.ts        // MK player events → bridge events
-  WebSubscriptionService.ts     // checkSubscription inference
-  apple-music-json-mapper.ts    // port of android/.../AppleMusicJsonMapper.kt
-  apple-music-errors.ts         // codes aligned with native
+src/modules/*.ts
+src/native-module.ts          → requireNativeModule (ios/android)
+src/native-module.web.ts      → web module
+src/bridge/handlers/*         → domain bridge (shared shape with native)
+src/rest/*                    → Catalog/Library/History/… REST clients
+src/web/
+  MusicKitLoader.ts
+  WebAppleMusicRestTransport.ts
+  WebQueueService.ts / WebPlaybackController.ts / WebPlaybackObserver.ts
+  WebSubscriptionService.ts
+  WebAppleMusicApiClient.ts   // thin façade over rest stack (optional)
+src/mappers/apple-music-json-mapper.ts
 ```
 
 **Rule:** Map MusicKit JS / API JSON to the **same plain objects** iOS already returns (`Song`, `Playlist`, `PlaybackState`, etc.). See [TYPES.md](./TYPES.md). Do not change `src/types/*` unless iOS and Android already agree on a fix.

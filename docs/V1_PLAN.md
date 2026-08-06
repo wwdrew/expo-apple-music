@@ -14,7 +14,7 @@ Plan for completing `@wwdrew/expo-apple-music` before a **1.0.0** release. The p
 |--------|-----------|
 | **Scope** | **Entire [Apple Music API](https://developer.apple.com/documentation/AppleMusicAPI)** read/write surface that makes sense on mobile + web, plus native playback |
 | **Platforms** | iOS, Android, Web (Expo) |
-| **Data path** | **One REST contract** for all user/catalog HTTP; **native SDKs** for auth + playback only |
+| **Data path** | **One REST contract** for user/catalog HTTP where needed; **iOS prefers MusicKit** for Auth, Catalog search/get, and Playback; Android/web use REST for data + native/MKJS for Auth/Playback |
 | **Errors** | Always `AppleMusicError` rejections — never silent empty data |
 | **Public API** | **Domain modules** (`Auth`, `Catalog`, `Library`, `History`, `Player`, …) named for Apple’s API domains |
 
@@ -26,29 +26,27 @@ Plan for completing `@wwdrew/expo-apple-music` before a **1.0.0** release. The p
 
 ## 2. What exists today (baseline)
 
-**Updated:** 2026-05-20. **Release:** `1.0.0` — manual sign-off [QA_SIGNOFF.md](./QA_SIGNOFF.md), then publish per [RELEASE_CHECKLIST.md](./RELEASE_CHECKLIST.md). Source of truth for per-endpoint status: [APPLE_MUSIC_API.md](./APPLE_MUSIC_API.md).
+**Updated:** 2026-08-06. Package is past **1.0** (see `package.json`); use [APPLE_MUSIC_API.md](./APPLE_MUSIC_API.md) + [PLATFORM_IMPLEMENTATION.md](./PLATFORM_IMPLEMENTATION.md) as live matrices. Manual QA: [QA_SIGNOFF.md](./QA_SIGNOFF.md); publish: [RELEASE_CHECKLIST.md](./RELEASE_CHECKLIST.md).
 
 ### Implemented (~majority of v1 matrix; optional rows still ⬜)
 
 | Domain | Public API | iOS | Android | Web |
 |--------|------------|-----|---------|-----|
-| Auth | `Auth.authorize`, `checkSubscription`, `getStorefront` | ✅ | ✅ / ⚠️ sub | ✅ / ⚠️ sub |
-| Catalog | `Catalog.search`, `get*`, relationships, `getCharts` | ✅ | ✅ | ✅ |
-| Library | `Library.getSongs`, `getPlaylists`, `getPlaylistTracks`, `getArtists`, `getAlbums` | ✅ | ✅ | ✅ |
-| History | `History.getRecentlyPlayed*`, `getHeavyRotation`, `getRecentlyAdded` | ✅ | ✅ (recent cap 10) | ✅ |
-| Ratings / mutations | `Ratings.*`, `LibraryMutations.*` | ✅ | ✅ | ✅ |
-| Recommendations | `Recommendations.get`, `getReplay` | ✅ | ✅ | ✅ |
+| Auth | `Auth.authorize`, `checkSubscription`, `getStorefront` | ✅ native sub | ✅ / ⚠️ inferred sub | ✅ / ⚠️ inferred sub |
+| Catalog | `Catalog.search`, `get*`, relationships, `getCharts` | ✅ native search/get; REST relationships/charts | ✅ | ✅ |
+| Library | `Library.getSongs`, `getPlaylists`, … | ✅ REST reads; native for playback resolve | ✅ | ✅ |
+| History | `History.getRecentlyPlayed*`, `getHeavyRotation`, `getRecentlyAdded` | ✅ REST | ✅ (recent cap ~10) | ✅ |
+| Ratings / mutations | `Ratings.*`, `LibraryMutations.*` | ✅ REST | ✅ | ✅ |
+| Recommendations | `Recommendations.get`, `getReplay` | ✅ REST | ✅ | ✅ |
 | Playback | `Player.setQueue`, `playLibrary*`, transport, hooks | ✅ | ✅ / station ❌ | ⚠️ soak QA |
 | Public exports | Domain modules only (`src/index.ts`) | ✅ | ✅ | ✅ |
 
-**Also in 1.0.0:** `Library.getMusicVideos`, `Library.search`, `Catalog.getByIds` — see [APPLE_MUSIC_API.md](./APPLE_MUSIC_API.md).
+### Remaining debt (post-1.0)
 
-### Structural debt remaining for 1.0
-
-1. **Dual mappers on iOS** — some `/me/*` still native vs REST; Android/web are REST-only (parity audits in [RELEASE_CHECKLIST.md](./RELEASE_CHECKLIST.md)).
-2. **Web playback** — implemented via MusicKit JS; needs Safari + Chrome manual QA before 1.0.
-3. **Silent-failure audit** — ensure every bridge path rejects `AppleMusicError` (no empty `data` on HTTP/native failure).
-4. **Documentation sync** — README web column, [WEB_IMPLEMENTATION.md](./WEB_IMPLEMENTATION.md) definition-of-done checkboxes, release checklist.
+1. **MusicItemMapper** fixture parity (native MusicKit → bridge) alongside REST fixtures.
+2. **Web playback** Safari + Chrome soak QA.
+3. **Silent-failure / inferred subscription** honesty on Android/web.
+4. Keep **docs** aligned with [PLATFORM_IMPLEMENTATION.md](./PLATFORM_IMPLEMENTATION.md) (native-first Catalog/Auth/Playback on iOS).
 
 ---
 
@@ -93,19 +91,20 @@ Plan for completing `@wwdrew/expo-apple-music` before a **1.0.0** release. The p
 
 **Use MusicKit natively when it can do the job.** Use REST only to **fill gaps** (no MusicKit API, or write endpoints). Every path must return the **same bridge shapes** as Android (`AppleMusicJsonMapper` / `fixtures`).
 
-**Native MusicKit (preferred on iOS):**
+**Native MusicKit (preferred on iOS when it can do the job):**
 
 - `Auth` / subscription (where better than inference)
 - **Playback** (queue, transport, now playing, events)
 - **Catalog** search and get-by-id
-- **Library** reads (playlists, songs, artists, albums, playlist tracks)
-- **History:** recently played resources and tracks
+- Library **playback** queue resolution (`MusicLibraryRequest` helpers)
 
-**REST on iOS (gap-fill):**
+**REST on iOS (gap-fill / pagination parity — see [PLATFORM_IMPLEMENTATION.md](./PLATFORM_IMPLEMENTATION.md)):**
 
+- **Library** list/search reads (`limit`/`offset` parity with Android/web)
+- **History** (all methods)
+- **Recommendations** + Replay
 - Ratings, favorites, library mutations (writes)
-- History: heavy rotation, recent stations, recently added
-- Catalog: relationships (album tracks, …), charts
+- Catalog: relationships (album tracks, …), charts, `getByIds`
 - `Auth.getStorefront()` and any call with no MusicKit equivalent
 
 **Requirement:** App passes **music user token** per user-scoped call; **developer JWT** stored natively when provided to `authorize()` / `setDeveloperToken()`. See [PLATFORM_IMPLEMENTATION.md](./PLATFORM_IMPLEMENTATION.md) for the per-method matrix.
