@@ -276,6 +276,14 @@ Web **Catalog** / **Library** / **History** call shared TS REST **adapter** (And
 | 2026-05-20 | 5 | History seam: native History services; bridge `getRecentlyPlayedResources`; REST recently-added on History client |
 | 2026-05-20 | 7 | Domain-grouped Expo bridge: manifest, envelopes, per-domain register/handlers on iOS/Android/Web |
 | 2026-08-06 | P2 | Docs/CONTEXT refresh: Library/History/Recommendations match PLATFORM matrix; native-first Catalog/Auth/Playback restated |
+| 2026-08-06 | P3 | CI: `yarn test:android-bridge` — JVM Gradle project compiles AppleMusicJsonMapper + fixtures |
+| 2026-08-06 | P4 | Delete shallow Android `*Service` façades; bridges use RestClients; slim WebAppleMusicApiClient |
+| 2026-08-06 | P5 | Split iOS CatalogService into MusicKit fetch + REST relationships/charts extensions |
+| 2026-08-06 | P6 | BridgeMapperHelpers (duration / playParams) + BridgeContractPackage tests; Catalog stays native-first |
+| 2026-08-06 | P7 | Jest: ExpoBridgeRegistrations AsyncFunction/Function names ≡ BRIDGE_METHODS (50) |
+| 2026-08-06 | P8 | Android/Web probeLibraryAccess throws on hard failures; AUTH.md note; iOS MusicKit unchanged |
+| 2026-08-06 | P9 | Example Auth readiness checklist + setQueue station-unsupported-on-Android note |
+| 2026-08-06 | P1 | Playback pure JVM tests: LibraryIds, MediaType, station message, PlaybackErrorMessages |
 
 ---
 
@@ -287,14 +295,14 @@ Clarification: the epic’s last PRs did **not** convert native → REST. `#33` 
 
 | # | Opportunity | Notes |
 | - | ----------- | ----- |
-| P1 | **Playback** deep module + tests | Highest risk; station gap on Android; web soak QA. Keep native adapters. |
-| P2 | **Docs / CONTEXT refresh** | CONTEXT still says Library reads = Native MusicKit — wrong vs PLATFORM matrix. Fix navigability; do not change transport while “fixing” docs. |
-| P3 | **CI: Android unit tests** | Kotlin bridge-contract fixtures exist; not in CI. |
-| P4 | Delete shallow Android `*Service` / web façades | Pass-through cleanup only — no transport change. |
-| P5 | Split remaining iOS `CatalogService` | Structure only; keep MusicKit get-by-id / native-first search. |
-| P6 | MusicItemMapper fixture parity | Prefer golden tests for native→bridge — **not** “shrink MusicItemMapper by moving Catalog get to REST.” |
-| P7 | `BRIDGE_METHODS` ↔ registration parity | Parity test / thin codegen; no REST implication. |
-| P8 | Auth `checkSubscription` honesty | Android/web probe swallows errors; deepen outcomes — keep iOS MusicKit subscription. |
-| P9 | Example Auth/Playback DX | Readiness panel + soak checklist. |
+| P1 | **Playback** deep module + tests | Highest risk; station gap on Android; web soak QA. Keep native adapters. **Done (minimal):** pure JVM tests for LibraryIds / queue MediaType / station message / expired-session error text. |
+| P2 | **Docs / CONTEXT refresh** | CONTEXT still says Library reads = Native MusicKit — wrong vs PLATFORM matrix. Fix navigability; do not change transport while “fixing” docs. **Done.** |
+| P3 | **CI: Android unit tests** | Kotlin bridge-contract fixtures exist; not in CI. **Done** (`yarn test:android-bridge`). |
+| P4 | Delete shallow Android `*Service` / web façades | Pass-through cleanup only — no transport change. **Done.** |
+| P5 | Split remaining iOS `CatalogService` | Structure only; keep MusicKit get-by-id / native-first search. **Done.** |
+| P6 | MusicItemMapper fixture parity | Prefer golden tests for native→bridge — **not** “shrink MusicItemMapper by moving Catalog get to REST.” **Done** (pure helpers + tests). |
+| P7 | `BRIDGE_METHODS` ↔ registration parity | Parity test / thin codegen; no REST implication. **Done.** |
+| P8 | Auth `checkSubscription` honesty | Android/web probe swallows errors; deepen outcomes — keep iOS MusicKit subscription. **Done.** |
+| P9 | Example Auth/Playback DX | Readiness panel + soak checklist. **Done** (Auth readiness + setQueue station note). |
 
 **Rejected / do-not-suggest without revisiting:** “Route more iOS Catalog get-by-id through REST to shrink MusicItemMapper.” Contradicts native-first preference.
