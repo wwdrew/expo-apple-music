@@ -1,8 +1,8 @@
-# Manual QA sign-off (1.0.0)
+# Manual QA sign-off (post-1.0 / next release)
 
 One session per platform. Use the **example** app (`cd example && npx expo start`). Developer JWT in `example/.env.local` (`yarn dev-token -- --write-env example/.env.local`).
 
-Check each box, note device/browser + date, then tag `v1.0.0`.
+Check each box, note device/browser + date. Use this checklist for the **next** tagged release after 1.0.0 (not only the original 1.0 gate).
 
 ---
 
@@ -29,32 +29,49 @@ Check each box, note device/browser + date, then tag `v1.0.0`.
 - [ ] `Library.getSongs` → play library song
 - [ ] `History.getRecentlyPlayedTracks`
 - [ ] Transport: pause, play, skip
-- [ ] Station queue fails with clear error (expected ❌)
+- [ ] Station queue fails with `UNSUPPORTED_PLATFORM` (expected ➖ permanent)
 
 **Signed:** _______________ **Date:** _______________
 
 ---
 
-## Web (Chrome + Safari, subscribed Apple ID)
+## Web — Chrome (subscribed Apple ID)
 
-- [ ] `Auth.authorize(developerToken)` (popups allowed for origin)
+- [ ] `Auth.authorize(developerToken)` — authorize **popup** allowed for origin; completes `authorized`
 - [ ] `Catalog.search` → results render
 - [ ] `Library.getPlaylists` / `getSongs`
 - [ ] `History.getRecentlyPlayedTracks`
-- [ ] Catalog song: queue + play
-- [ ] Hooks: `usePlaybackState` / `useCurrentSong` update for **30s+** (seek or skip once)
-- [ ] Repeat in second browser if first was Chrome-only
+- [ ] Catalog song: `setQueue` + `play`
+- [ ] **Soak:** leave playing **30s+**; confirm `usePlaybackState` / `useCurrentSong` stay healthy
+- [ ] **Seek** (scrubber or `seekToTime`) mid-track; playback continues
+- [ ] **Skip** next/previous when queue has entries
+- [ ] `Player.configurePlayer({ mixWithOthers: true })` — stub echoes config; `supportedFeatures` all `false`; `mixWithOthers` remains `false` in the return ([PLAYBACK.md](./PLAYBACK.md))
 
-**Signed:** _______________ **Date:** _______________
+**Signed:** _______________ **Date:** _______________ **Browser/build:** _______________
 
 ---
 
-## Publish (after all three signed)
+## Web — Safari (subscribed Apple ID)
+
+Repeat the Chrome web checklist on Safari (separate sign-off — MusicKit JS / popup / autoplay differ by browser).
+
+- [ ] Authorize popup + `authorized`
+- [ ] Catalog search + library/history smoke
+- [ ] Queue + play catalog song
+- [ ] **Soak 30s+** with hooks updating
+- [ ] Seek + skip
+- [ ] `configurePlayer` stub / `supportedFeatures` expectations as above
+
+**Signed:** _______________ **Date:** _______________ **Safari version:** _______________
+
+---
+
+## Publish (after platforms signed for this release)
 
 ```sh
-yarn test && yarn pack:check
+yarn test && yarn lint && yarn pack:check
 npm publish --access public
-git tag v1.0.0 && git push origin v1.0.0
+git tag vX.Y.Z && git push origin vX.Y.Z
 ```
 
 See [RELEASE_CHECKLIST.md](./RELEASE_CHECKLIST.md) §7.
