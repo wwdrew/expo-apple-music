@@ -1,19 +1,20 @@
 import type { WebAppleMusicApiClient } from '../../web/WebAppleMusicApiClient';
 
 export function createRatingsBridge(api: WebAppleMusicApiClient) {
+  const ratings = api.ratings;
   return {
     getRating: (musicUserToken: string, resourceType: string, id: string) =>
-      api.getRating(musicUserToken, resourceType, id),
+      ratings.getRating(musicUserToken, resourceType, id),
     setRating: (musicUserToken: string, resourceType: string, id: string, value: number) =>
-      api.setRating(musicUserToken, resourceType, id, value),
+      ratings.setRating(musicUserToken, resourceType, id, value),
     clearRating: async (musicUserToken: string, resourceType: string, id: string) => {
-      await api.clearRating(musicUserToken, resourceType, id);
+      await ratings.clearRating(musicUserToken, resourceType, id);
     },
     addToFavorites: async (musicUserToken: string, resourceIds: Record<string, string[]>) => {
-      await api.addToFavorites(musicUserToken, resourceIds);
+      await ratings.addToFavorites(musicUserToken, resourceIds);
     },
     removeFromFavorites: async (musicUserToken: string, resourceIds: Record<string, string[]>) => {
-      await api.removeFromFavorites(musicUserToken, resourceIds);
+      await ratings.removeFromFavorites(musicUserToken, resourceIds);
     },
   };
 }

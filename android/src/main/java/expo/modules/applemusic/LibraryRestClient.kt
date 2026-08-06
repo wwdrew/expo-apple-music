@@ -151,6 +151,11 @@ internal class LibraryRestClient(
       )
     }
 
+  /**
+   * Lightweight library probe for subscription inference.
+   * Returns `false` only on HTTP 403 / `permissionDenied` (no library / subscription).
+   * Network failures, missing tokens, and other API errors are rethrown.
+   */
   suspend fun probeLibraryAccess(musicUserToken: String): Boolean =
     withContext(Dispatchers.IO) {
       try {
@@ -158,8 +163,15 @@ internal class LibraryRestClient(
           musicUserToken,
           "/v1/me/library/songs", mapOf("limit" to "1"))
         true
-      } catch (_: Exception) {
-        false
+      } catch (error: expo.modules.kotlin.exception.CodedException) {
+        if (
+          error.code == AppleMusicErrorCodes.PERMISSION_DENIED &&
+          error.message?.contains("403") == true
+        ) {
+          false
+        } else {
+          throw error
+        }
       }
     }
 

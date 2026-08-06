@@ -41,13 +41,13 @@ export class WebQueueService {
   }
 
   async playLibrarySong(musicUserToken: string, songId: string): Promise<void> {
-    const catalogId = await this.api.resolveCatalogPlaybackId(musicUserToken, songId, 'song');
+    const catalogId = await this.api.library.resolveCatalogPlaybackId(musicUserToken, songId, 'song');
     const music = await getMusic();
     await music.setQueue({ songs: [catalogId] });
   }
 
   async playLibraryPlaylist(musicUserToken: string, playlistId: string, startingAt: number): Promise<void> {
-    const catalogIds = await this.api.resolveLibrarySongCatalogIds(musicUserToken, playlistId);
+    const catalogIds = await this.api.library.resolveLibrarySongCatalogIds(musicUserToken, playlistId);
     if (catalogIds.length === 0) {
       throw errors.noSongsInPlaylist();
     }

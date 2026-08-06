@@ -140,14 +140,12 @@ enum MusicItemMapper {
           let data = try? JSONEncoder().encode(playParameters),
           let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
     else { return nil }
-    if let id = json["id"] as? String, !id.isEmpty { return id }
-    if let catalogId = json["catalogId"] as? String, !catalogId.isEmpty { return catalogId }
-    return nil
+    return BridgeMapperHelpers.catalogPlaybackId(fromPlayParams: json)
   }
 
   /// MusicKit `duration` is seconds; bridge uses milliseconds (matches `durationInMillis` from REST).
   static func durationMillis(_ seconds: TimeInterval?) -> Int {
-    Int((seconds ?? 0) * 1000)
+    BridgeMapperHelpers.durationMillis(fromSeconds: seconds)
   }
 
   private static func playlistTrackCount(_ playlist: Playlist) -> Int {

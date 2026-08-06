@@ -33,7 +33,7 @@ internal object BridgeResponses {
       if (currentSong != null) put("currentSong", currentSong)
     }
 
-  fun catalogSearch(result: AndroidCatalogService.SearchResult): Map<String, Any?> =
+  fun catalogSearch(result: CatalogRestClient.CatalogSearchResult): Map<String, Any?> =
     mapOf(
       "songs" to result.songs,
       "albums" to result.albums,
@@ -43,7 +43,7 @@ internal object BridgeResponses {
       "musicVideos" to result.musicVideos,
     )
 
-  fun catalogCharts(result: AndroidCatalogService.ChartsResult): Map<String, Any?> =
+  fun catalogCharts(result: CatalogRestClient.CatalogChartsResult): Map<String, Any?> =
     mapOf(
       "songs" to result.songs,
       "albums" to result.albums,
@@ -61,7 +61,7 @@ internal object BridgeResponses {
 
   fun musicVideos(items: List<Map<String, Any?>>): Map<String, Any?> = mapOf("musicVideos" to items)
 
-  fun librarySearch(result: AndroidLibraryService.LibrarySearchResult): Map<String, Any?> =
+  fun librarySearch(result: LibraryRestClient.LibrarySearchResult): Map<String, Any?> =
     mapOf(
       "songs" to result.songs,
       "albums" to result.albums,

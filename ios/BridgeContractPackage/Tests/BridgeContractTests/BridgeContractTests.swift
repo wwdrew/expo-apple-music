@@ -5,8 +5,8 @@ import XCTest
 /**
  Mirror of `BRIDGE_CONTRACT_CASES` / Android `BridgeContractTest` for iOS `RestJsonMapper`.
 
- MusicItemMapper (MusicKit-native) cases are intentionally omitted — static JSON cannot
- construct MusicKit types; add XCTSkip strategy if native fixtures are introduced later.
+ Full MusicItemMapper (MusicKit Song/Album) cases need MusicKit types; pure duration /
+ playParams helpers are covered below via `BridgeMapperHelpers`.
  */
 final class BridgeContractTests: XCTestCase {
   private func fixturesRoot() -> URL {
@@ -82,5 +82,30 @@ final class BridgeContractTests: XCTestCase {
   func testMapRatingLike() throws {
     let input = try loadJSON("ratings-response.json")
     try assertBridgeEqual(RestJsonMapper.mapRating(input), expectedFile: "rating.like.json")
+  }
+
+  func testDurationMillisFromSeconds() {
+    XCTAssertEqual(BridgeMapperHelpers.durationMillis(fromSeconds: nil), 0)
+    XCTAssertEqual(BridgeMapperHelpers.durationMillis(fromSeconds: 0), 0)
+    XCTAssertEqual(BridgeMapperHelpers.durationMillis(fromSeconds: 1.5), 1500)
+    XCTAssertEqual(BridgeMapperHelpers.durationMillis(fromSeconds: 212.345), 212_345)
+  }
+
+  func testCatalogPlaybackIdFromPlayParams() {
+    XCTAssertNil(BridgeMapperHelpers.catalogPlaybackId(fromPlayParams: nil))
+    XCTAssertNil(BridgeMapperHelpers.catalogPlaybackId(fromPlayParams: [:]))
+    XCTAssertNil(BridgeMapperHelpers.catalogPlaybackId(fromPlayParams: ["id": ""]))
+    XCTAssertEqual(
+      BridgeMapperHelpers.catalogPlaybackId(fromPlayParams: ["id": "catalog.song.1"]),
+      "catalog.song.1"
+    )
+    XCTAssertEqual(
+      BridgeMapperHelpers.catalogPlaybackId(fromPlayParams: ["catalogId": "c.2"]),
+      "c.2"
+    )
+    XCTAssertEqual(
+      BridgeMapperHelpers.catalogPlaybackId(fromPlayParams: ["id": "primary", "catalogId": "alt"]),
+      "primary"
+    )
   }
 }

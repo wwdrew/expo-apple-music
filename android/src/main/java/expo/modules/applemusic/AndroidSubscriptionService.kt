@@ -4,6 +4,7 @@ import android.content.Context
 
 /**
  * Approximates iOS [MusicSubscription] fields — there is no equivalent on Android.
+ * Library probe returns false only for HTTP 403; other failures propagate.
  */
 internal class AndroidSubscriptionService(
   private val library: LibraryRestClient,

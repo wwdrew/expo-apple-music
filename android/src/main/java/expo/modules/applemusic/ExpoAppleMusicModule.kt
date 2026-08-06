@@ -31,29 +31,17 @@ class ExpoAppleMusicModule : Module() {
   private val playbackController: AndroidPlaybackController
     get() = AndroidPlaybackController.getInstance(reactContext)
 
-  private val catalogService: AndroidCatalogService
-    get() = AndroidCatalogService(reactContext)
+  private val restStack: AppleMusicRestStack
+    get() = AppleMusicRestStack.create(reactContext)
 
   private val libraryService: AndroidLibraryService
-    get() = AndroidLibraryService(reactContext)
-
-  private val historyService: AndroidHistoryService
-    get() = AndroidHistoryService(reactContext)
+    get() = AndroidLibraryService(restStack)
 
   private val subscriptionService: AndroidSubscriptionService
     get() = AndroidSubscriptionService(reactContext)
 
   private val queueService: AndroidQueueService
     get() = AndroidQueueService(reactContext, playbackController)
-
-  private val ratingsService: AndroidRatingsService
-    get() = AndroidRatingsService(reactContext)
-
-  private val libraryMutationsService: AndroidLibraryMutationsService
-    get() = AndroidLibraryMutationsService(reactContext)
-
-  private val recommendationsService: AndroidRecommendationsService
-    get() = AndroidRecommendationsService(reactContext)
 
   override fun definition() = ModuleDefinition {
     Name("ExpoAppleMusic")
@@ -114,9 +102,9 @@ class ExpoAppleMusicModule : Module() {
       subscriptionService = { subscriptionService },
       libraryService = { libraryService },
     )
-    registerCatalogBridge { catalogService }
+    registerCatalogBridge { restStack.catalog }
     registerLibraryBridge { libraryService }
-    registerHistoryBridge { historyService }
+    registerHistoryBridge { restStack.history }
     registerPlayerBridge(
       moduleScope = moduleScope,
       playbackController = { playbackController },
@@ -126,9 +114,9 @@ class ExpoAppleMusicModule : Module() {
         sendEvent("onPlaybackTimeUpdate", mapOf("playbackTime" to time))
       },
     )
-    registerRatingsBridge { ratingsService }
-    registerLibraryMutationsBridge { libraryMutationsService }
-    registerRecommendationsBridge { recommendationsService }
+    registerRatingsBridge { restStack.ratings }
+    registerLibraryMutationsBridge { restStack.libraryMutations }
+    registerRecommendationsBridge { restStack.recommendations }
   }
 
   private fun emitPlaybackError(error: Exception, operation: String) {

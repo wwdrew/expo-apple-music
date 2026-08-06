@@ -12,7 +12,7 @@ export class WebSubscriptionService {
       throw errors.missingTokens();
     }
 
-    const libraryOk = await this.api.probeLibraryAccess(musicUserToken);
+    const libraryOk = await this.api.library.probeLibraryAccess(musicUserToken);
     const canPlay = libraryOk;
 
     return BridgeResponses.subscription({

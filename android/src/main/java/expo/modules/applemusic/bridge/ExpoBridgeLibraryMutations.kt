@@ -1,14 +1,14 @@
 package expo.modules.applemusic.bridge
 
-import expo.modules.applemusic.AndroidLibraryMutationsService
+import expo.modules.applemusic.LibraryMutationsRestClient
 import expo.modules.kotlin.functions.Coroutine
 import expo.modules.kotlin.modules.ModuleDefinitionBuilder
 
 internal fun ModuleDefinitionBuilder.registerLibraryMutationsBridge(
-  libraryMutationsService: () -> AndroidLibraryMutationsService,
+  libraryMutations: () -> LibraryMutationsRestClient,
 ) {
   AsyncFunction("addToLibrary") Coroutine { musicUserToken: String, resourceIds: Map<String, List<String>> ->
-    libraryMutationsService().addToLibrary(musicUserToken, resourceIds)
+    libraryMutations().addToLibrary(musicUserToken, resourceIds)
   }
 
   AsyncFunction("createLibraryPlaylist") Coroutine { musicUserToken: String, options: Map<String, Any?> ->
@@ -17,7 +17,7 @@ internal fun ModuleDefinitionBuilder.registerLibraryMutationsBridge(
     val isPublic = options["isPublic"] as? Boolean ?: false
     @Suppress("UNCHECKED_CAST")
     val tracks = options["tracks"] as? List<Map<String, String>>
-    libraryMutationsService().createPlaylist(musicUserToken, name, description, isPublic, tracks)
+    libraryMutations().createLibraryPlaylist(musicUserToken, name, description, isPublic, tracks)
   }
 
   AsyncFunction("addTracksToLibraryPlaylist") Coroutine {
@@ -25,6 +25,6 @@ internal fun ModuleDefinitionBuilder.registerLibraryMutationsBridge(
       playlistId: String,
       tracks: List<Map<String, String>>,
     ->
-    libraryMutationsService().addTracksToPlaylist(musicUserToken, playlistId, tracks)
+    libraryMutations().addTracksToLibraryPlaylist(musicUserToken, playlistId, tracks)
   }
 }

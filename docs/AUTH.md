@@ -76,7 +76,7 @@ There is **no web-based login** on Android native MusicKit — only the Apple Mu
 - Success is determined from **`music.isAuthorized`** after `music.authorize()` — the SDK return value is often a user token string, not a status label
 - **Apple Developer portal:** enable **MusicKit** on your App ID ([Certificates, Identifiers & Profiles](https://developer.apple.com/account/resources) → **Identifiers** → your App ID → **App Services** → MusicKit). There is **no** separate “add web domain” screen like Sign in with Apple — see [Web origin (optional JWT claim)](#web-origin-optional-jwt-claim) below.
 - `options` (`hideStartScreen`, `startScreenMessage`) are **ignored** on web
-- `checkSubscription()` uses REST inference (library probe), not `MusicSubscription.current`
+- `checkSubscription()` uses REST inference (library probe), not `MusicSubscription.current`. A 403 maps to false flags; other probe failures throw (see [`Auth.checkSubscription()`](#authchecksubscription)).
 
 See [WEB_IMPLEMENTATION.md](./WEB_IMPLEMENTATION.md).
 
@@ -271,7 +271,7 @@ switch (status) {
 | `hasCloudLibraryEnabled` | Cloud library modifications allowed |
 | `isMusicCatalogSubscriptionEligible` | Same as `canBecomeSubscriber` (compat) |
 
-On **Android and web**, the call returns best-effort flags inferred from authorization + library access (see [WEB_IMPLEMENTATION.md](./WEB_IMPLEMENTATION.md#checksubscription-on-web)).
+On **Android and web**, the call returns best-effort flags inferred from authorization + a library probe (`GET /v1/me/library/songs?limit=1`). A **403** (no library / subscription) maps to `false` flags; **network failures, missing tokens, and other API errors are thrown** — they are not reported as “not subscribed.” iOS keeps native `MusicSubscription`.
 
 Requires `musicUserToken` from `authorize()` (first parameter).
 
