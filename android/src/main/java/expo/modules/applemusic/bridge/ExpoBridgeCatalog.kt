@@ -1,68 +1,70 @@
 package expo.modules.applemusic.bridge
 
-import expo.modules.applemusic.AndroidCatalogService
 import expo.modules.applemusic.AppleMusicErrors
 import expo.modules.applemusic.BridgeResponses
+import expo.modules.applemusic.CatalogRestClient
 import expo.modules.applemusic.PaginationOptions
 import expo.modules.kotlin.functions.Coroutine
 import expo.modules.kotlin.modules.ModuleDefinitionBuilder
 
 internal fun ModuleDefinitionBuilder.registerCatalogBridge(
-  catalogService: () -> AndroidCatalogService,
+  catalog: () -> CatalogRestClient,
 ) {
   AsyncFunction("catalogSearch") Coroutine { term: String, types: List<String>, options: Map<String, Any?> ->
     val pagination = PaginationOptions.fromMap(options)
-    BridgeResponses.catalogSearch(catalogService().search(term, types, pagination))
+    BridgeResponses.catalogSearch(catalog().catalogSearch(term, types, pagination.limit, pagination.offset))
   }
 
   AsyncFunction("getCatalogSong") Coroutine { id: String ->
-    catalogService().getSong(id)
+    catalog().getCatalogSong(id)
   }
 
   AsyncFunction("getCatalogAlbum") Coroutine { id: String ->
-    catalogService().getAlbum(id)
+    catalog().getCatalogAlbum(id)
   }
 
   AsyncFunction("getCatalogArtist") Coroutine { id: String ->
-    catalogService().getArtist(id)
+    catalog().getCatalogArtist(id)
   }
 
   AsyncFunction("getCatalogPlaylist") Coroutine { id: String ->
-    catalogService().getPlaylist(id)
+    catalog().getCatalogPlaylist(id)
   }
 
   AsyncFunction("getCatalogStation") Coroutine { id: String ->
-    catalogService().getStation(id)
+    catalog().getCatalogStation(id)
   }
 
   AsyncFunction("getCatalogMusicVideo") Coroutine { id: String ->
-    catalogService().getMusicVideo(id)
+    catalog().getCatalogMusicVideo(id)
   }
 
   AsyncFunction("getCatalogAlbumTracks") Coroutine { albumId: String, options: Map<String, Any?> ->
     val pagination = PaginationOptions.fromMap(options)
-    BridgeResponses.songs(catalogService().getAlbumTracks(albumId, pagination))
+    BridgeResponses.songs(catalog().getCatalogAlbumTracks(albumId, pagination.limit, pagination.offset))
   }
 
   AsyncFunction("getCatalogArtistAlbums") Coroutine { artistId: String, options: Map<String, Any?> ->
     val pagination = PaginationOptions.fromMap(options)
-    BridgeResponses.albums(catalogService().getArtistAlbums(artistId, pagination))
+    BridgeResponses.albums(catalog().getCatalogArtistAlbums(artistId, pagination.limit, pagination.offset))
   }
 
   AsyncFunction("getCatalogPlaylistTracks") Coroutine { playlistId: String, options: Map<String, Any?> ->
     val pagination = PaginationOptions.fromMap(options)
-    BridgeResponses.songs(catalogService().getPlaylistTracks(playlistId, pagination))
+    BridgeResponses.songs(catalog().getCatalogPlaylistTracks(playlistId, pagination.limit, pagination.offset))
   }
 
   AsyncFunction("getCatalogCharts") Coroutine { types: List<String>, options: Map<String, Any?> ->
     val pagination = PaginationOptions.fromMap(options)
     val genre = options["genre"] as? String
     val chart = options["chart"] as? String
-    BridgeResponses.catalogCharts(catalogService().getCharts(types, pagination, genre, chart))
+    BridgeResponses.catalogCharts(
+      catalog().getCatalogCharts(types, pagination.limit, pagination.offset, genre, chart),
+    )
   }
 
   AsyncFunction("getCatalogResources") Coroutine { type: String, ids: List<String> ->
-    val items = catalogService().getResources(type, ids)
+    val items = catalog().getCatalogResources(type, ids)
     when (type) {
       "songs" -> BridgeResponses.songs(items)
       "albums" -> BridgeResponses.albums(items)

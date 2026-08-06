@@ -1,18 +1,18 @@
 package expo.modules.applemusic.bridge
 
-import expo.modules.applemusic.AndroidRecommendationsService
 import expo.modules.applemusic.BridgeResponses
+import expo.modules.applemusic.RecommendationsRestClient
 import expo.modules.kotlin.functions.Coroutine
 import expo.modules.kotlin.modules.ModuleDefinitionBuilder
 
 internal fun ModuleDefinitionBuilder.registerRecommendationsBridge(
-  recommendationsService: () -> AndroidRecommendationsService,
+  recommendations: () -> RecommendationsRestClient,
 ) {
   AsyncFunction("getRecommendations") Coroutine { musicUserToken: String, ids: List<String>? ->
-    BridgeResponses.recommendations(recommendationsService().getRecommendations(musicUserToken, ids))
+    BridgeResponses.recommendations(recommendations().getRecommendations(musicUserToken, ids))
   }
 
   AsyncFunction("getReplay") Coroutine { musicUserToken: String, year: Int? ->
-    BridgeResponses.replaySummaries(recommendationsService().getReplay(musicUserToken, year))
+    BridgeResponses.replaySummaries(recommendations().getReplay(musicUserToken, year))
   }
 }

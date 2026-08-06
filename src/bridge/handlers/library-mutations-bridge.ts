@@ -1,9 +1,10 @@
 import type { WebAppleMusicApiClient } from '../../web/WebAppleMusicApiClient';
 
 export function createLibraryMutationsBridge(api: WebAppleMusicApiClient) {
+  const libraryMutations = api.libraryMutations;
   return {
     addToLibrary: async (musicUserToken: string, resourceIds: Record<string, string[]>) => {
-      await api.addToLibrary(musicUserToken, resourceIds);
+      await libraryMutations.addToLibrary(musicUserToken, resourceIds);
     },
 
     async createLibraryPlaylist(musicUserToken: string, options: Record<string, unknown>) {
@@ -13,7 +14,13 @@ export function createLibraryMutationsBridge(api: WebAppleMusicApiClient) {
       const tracks = Array.isArray(options.tracks)
         ? (options.tracks as { id: string; type: string }[])
         : null;
-      return api.createLibraryPlaylist(musicUserToken, name, description, isPublic, tracks);
+      return libraryMutations.createLibraryPlaylist(
+        musicUserToken,
+        name,
+        description,
+        isPublic,
+        tracks,
+      );
     },
 
     addTracksToLibraryPlaylist: async (
@@ -21,7 +28,7 @@ export function createLibraryMutationsBridge(api: WebAppleMusicApiClient) {
       playlistId: string,
       tracks: { id: string; type: string }[],
     ) => {
-      await api.addTracksToLibraryPlaylist(musicUserToken, playlistId, tracks);
+      await libraryMutations.addTracksToLibraryPlaylist(musicUserToken, playlistId, tracks);
     },
   };
 }
