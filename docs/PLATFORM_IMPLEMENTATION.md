@@ -43,7 +43,7 @@ How each **public JS method** is implemented on iOS vs Android. The TypeScript A
 
 ## Library (read)
 
-iOS library **reads** use REST for pagination parity with Android/web (`limit`/`offset`, `/v1/me/library/search`). Native `MusicLibraryRequest` remains for **playback** queue resolution in `QueueService` only.
+iOS library **reads** use REST for pagination parity with Android/web (`limit`/`offset`, `/v1/me/library/search`). There is no unused “native list” path — `MusicLibraryRequest` helpers on `LibraryService` (`fetchSong` / `fetchAlbum` / `fetchPlaylist`) exist only for **playback queue** resolution in `QueueService` (`playLibrarySong` / `playLibraryPlaylist` / library-typed `setQueue`).
 
 | JS API | iOS | Android |
 |--------|-----|---------|
