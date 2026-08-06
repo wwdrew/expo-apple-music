@@ -57,7 +57,20 @@ const config = await Player.configurePlayer({ mixWithOthers: true });
 // config.playerType — 'application' | 'system'
 // config.mixWithOthers — boolean (on Android/web stubs, always false)
 // config.audioSession — normalized session object when present
+// config.supportedFeatures — Android/web stubs only (see below)
 ```
+
+On **Android** and **web**, the stub response includes:
+
+```ts
+supportedFeatures: {
+  mixWithOthers: false,
+  audioSession: false,
+  systemPlayer: false,
+}
+```
+
+**iOS** does not add `supportedFeatures` — mixing, `AVAudioSession`, and `SystemMusicPlayer` are applied for real.
 
 ## Advanced: `audioSession` (iOS)
 
@@ -83,6 +96,6 @@ Invalid category/mode/option strings throw on iOS. Audio session is applied **be
 | Platform | Behavior |
 | -------- | -------- |
 | **iOS** | Full backend switch + `AVAudioSession` |
-| **Android / web** | Best-effort stub: echo a normalized `PlayerConfig`. Mixing and system-player semantics are **not** mirrored. `mixWithOthers` in the return is always `false`. |
+| **Android / web** | Echo a normalized `PlayerConfig` (stub). Mixing, session category, and system-player semantics are **not** applied — only iOS runs `AVAudioSession` / `SystemMusicPlayer`. Check `supportedFeatures` on stubs; `mixWithOthers` in the return is always `false`. |
 
 See also: [PLATFORM_IMPLEMENTATION.md](./PLATFORM_IMPLEMENTATION.md), [WEB_IMPLEMENTATION.md](./WEB_IMPLEMENTATION.md), [ANDROID_PLAYBACK.md](./ANDROID_PLAYBACK.md).
