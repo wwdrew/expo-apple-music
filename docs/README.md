@@ -28,6 +28,7 @@ Guides for using **@wwdrew/expo-apple-music** in your Expo app. Browse this fold
 | **[HISTORY.md](./HISTORY.md)** | Recently played, heavy rotation |
 | **[RECOMMENDATIONS.md](./RECOMMENDATIONS.md)** | Recommendations vs history |
 | **[TYPES.md](./TYPES.md)** | TypeScript naming conventions |
+| **[adr/](./adr/)** | Architecture decision records (iOS native-first, library REST reads) |
 
 ## Contributors (this repo)
 

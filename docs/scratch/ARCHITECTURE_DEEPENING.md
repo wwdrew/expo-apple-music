@@ -4,7 +4,7 @@ Work through these one at a time. Vocabulary: **module**, **interface**, **seam*
 
 Domain terms: [CONTEXT.md](../../CONTEXT.md) (Catalog / Library / History / Auth).
 
-Suggested order at bottom. No ADRs in repo yet — record decisions when you reject a candidate for a load-bearing reason.
+Suggested order at bottom. ADRs live in [docs/adr/](../adr/) — record decisions when you reject a candidate for a load-bearing reason.
 
 ---
 
