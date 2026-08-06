@@ -77,4 +77,12 @@ describe('stubConfigurePlayerResponse', () => {
       setActive: true,
     });
   });
+
+  it('advertises unsupported features on stubs', () => {
+    expect(stubConfigurePlayerResponse({}).supportedFeatures).toEqual({
+      mixWithOthers: false,
+      audioSession: false,
+      systemPlayer: false,
+    });
+  });
 });

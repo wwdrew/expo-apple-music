@@ -13,11 +13,19 @@ import { normalizePlayerConfig } from './normalize-player-config';
  *
  * Default backend is **`application`** (`ApplicationMusicPlayer`) — in-app queue.
  * Pass `playerType: 'system'` only when you intentionally want Music-app / system playback.
+ *
+ * Android/web stubs may include `supportedFeatures` (all false). iOS does not add that key.
  */
 export interface PlayerConfig {
   mixWithOthers: boolean;
   playerType: PlayerType;
   audioSession?: AudioSessionConfig;
+  /** Present on Android/web stubs only — which configure knobs are actually applied. */
+  supportedFeatures?: {
+    mixWithOthers: boolean;
+    audioSession: boolean;
+    systemPlayer: boolean;
+  };
 }
 
 /** MusicKit playback backend. Default / usual choice: `application`. */
@@ -204,8 +212,9 @@ class Player {
    * **iOS** — Applies `AVAudioSession`, then switches backend if requested. A failed
    * session config leaves the current player type unchanged.
    *
-   * **Android / web** — Returns a normalized `PlayerConfig` shape; session category,
-   * ducking, and focus are not fully mirrored. Do not assume iOS parity.
+   * **Android / web** — Returns a normalized `PlayerConfig` stub with
+   * `supportedFeatures` all `false`. Session category, ducking, and system player
+   * are not applied. Do not assume iOS parity.
    */
   public static async configurePlayer(
     options: boolean | ConfigurePlayerOptions = false,

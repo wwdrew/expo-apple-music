@@ -8,4 +8,5 @@ enum AppleMusicErrorCodes {
   static let error = "ERROR"
   static let permissionDenied = "permissionDenied"
   static let playbackError = "PLAYBACK_ERROR"
+  static let unsupportedPlatform = "UNSUPPORTED_PLATFORM"
 }

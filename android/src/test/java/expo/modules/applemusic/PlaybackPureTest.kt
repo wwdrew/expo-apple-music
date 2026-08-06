@@ -26,9 +26,11 @@ class PlaybackPureTest {
 
   @Test
   fun stationUnsupportedMessage_isStable() {
-    assertTrue(
-      PlaybackQueueRules.STATION_UNSUPPORTED_ON_ANDROID.contains("not supported on Android"),
+    assertEquals(
+      "Station playback is not supported on Android.",
+      PlaybackQueueRules.STATION_UNSUPPORTED_ON_ANDROID,
     )
+    assertFalse(PlaybackQueueRules.STATION_UNSUPPORTED_ON_ANDROID.contains("yet"))
   }
 
   @Test

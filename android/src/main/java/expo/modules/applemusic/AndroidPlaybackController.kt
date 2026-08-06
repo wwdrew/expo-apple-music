@@ -58,6 +58,13 @@ internal class AndroidPlaybackController private constructor(
     if (payload["playerType"] == null) {
       payload["playerType"] = "application"
     }
+    // Honesty flags — iOS returns a real session/backend without these keys.
+    payload["supportedFeatures"] =
+      mapOf(
+        "mixWithOthers" to false,
+        "audioSession" to false,
+        "systemPlayer" to false,
+      )
     return payload
   }
 

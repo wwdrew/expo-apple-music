@@ -2,7 +2,7 @@
 
 How each **public JS method** is implemented on iOS vs Android. The TypeScript API is identical; only the native transport differs.
 
-**Policy (iOS):** Use **MusicKit** for auth, catalog (native-first with REST fallback), and **library playback** queue resolution. Use **REST** (`AppleMusicRestClient`) for library/history **reads**, REST-only writes, and catalog gaps. Both paths must emit the **same bridge object shape** as Android’s `AppleMusicJsonMapper` (see [TYPES.md](./TYPES.md), `fixtures/*.json`).
+**Policy (iOS):** Use **MusicKit** for auth, catalog (native-first with REST fallback), recommendations when listing all (no `ids`), and **library playback** queue resolution. Use **REST** (`AppleMusicRestClient`) for library/history **reads**, REST-only writes, catalog gaps, id-filtered recommendations, and Replay. Both paths must emit the **same bridge object shape** as Android’s `AppleMusicJsonMapper` (see [TYPES.md](./TYPES.md), `fixtures/*.json`).
 
 **Policy (Android):** REST via `*RestClient` + `AppleMusicRestStack` + `AppleMusicJsonMapper` for all data reads/writes; MusicKit AAR for auth and playback.
 
@@ -78,8 +78,8 @@ All history methods use **REST** on iOS (`HistoryService` → `AppleMusicRestCli
 
 | JS API | iOS | Android |
 |--------|-----|---------|
-| `Recommendations.get()` (no ids) | REST `GET /v1/me/recommendations` | REST `GET /v1/me/recommendations` |
-| `Recommendations.get({ ids })` | REST | REST |
+| `Recommendations.get()` (no ids) | **Native** `MusicPersonalRecommendationsRequest` | REST `GET /v1/me/recommendations` |
+| `Recommendations.get({ ids })` | REST `GET /v1/me/recommendations?ids=` | REST |
 | `Recommendations.getReplay()` | REST `GET /v1/me/music-summaries` | REST |
 
 Heavy rotation: `History.getHeavyRotation()` — not this module ([RECOMMENDATIONS.md](./RECOMMENDATIONS.md)).
@@ -129,6 +129,6 @@ On **Android**, catalog `setQueue` requires a music user token in the native ses
 |------|------|
 | Recent played containers | Apple caps some `/v1/me/recent/*` responses (e.g. ~10 items on resources); iOS and Android both use REST |
 | `Auth.checkSubscription()` | Android infers flags; iOS uses MusicKit subscription APIs |
-| Catalog station queue | iOS native ✅; Android playback AAR ❌ |
-| `Player.configurePlayer` | iOS: real backend + AVAudioSession; Android/web: stub payload only ([PLAYBACK.md](./PLAYBACK.md)) |
+| Catalog station queue | iOS native ✅; Android playback AAR ➖ permanent (`UNSUPPORTED_PLATFORM`); web ⚠️ |
+| `Player.configurePlayer` | iOS: real backend + AVAudioSession; Android/web: stub payload + `supportedFeatures` all false ([PLAYBACK.md](./PLAYBACK.md)) |
 | REST on iOS without dev JWT | GET may use `MusicDataRequest` fallback; **writes** require stored tokens |

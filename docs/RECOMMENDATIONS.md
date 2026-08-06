@@ -6,8 +6,10 @@ Personalized content via `Recommendations.*`. For listening history and heavy ro
 
 | Method | Endpoint / source | Notes |
 |--------|-------------------|--------|
-| `Recommendations.get()` | `GET /v1/me/recommendations` (iOS, Android, web) | Omit `ids` for all recommendations. Pass `ids` for specific `personal-recommendation` resources. |
-| `Recommendations.getReplay({ year? })` | `GET /v1/me/music-summaries` | Latest eligible year when `year` omitted. Requires enough listening history; may error if ineligible. |
+| `Recommendations.get()` | **iOS:** MusicKit `MusicPersonalRecommendationsRequest` when `ids` omitted; REST when `ids` present. **Android/web:** REST `GET /v1/me/recommendations` | Omit `ids` for all recommendations. Pass `ids` for specific `personal-recommendation` resources. |
+| `Recommendations.getReplay({ year? })` | REST `GET /v1/me/music-summaries` | Latest eligible year when `year` omitted. Requires enough listening history; may error if ineligible. |
+
+Native iOS recommendations map to the same bridge shape as REST (`title`, `resourceTypes`, nested `playlists` / `albums` / `stations`) via `MusicItemMapper` — see [PLATFORM_IMPLEMENTATION.md](./PLATFORM_IMPLEMENTATION.md), ADR-0001.
 
 ## Heavy rotation
 
@@ -15,7 +17,7 @@ Personalized content via `Recommendations.*`. For listening history and heavy ro
 
 ## Auth
 
-Requires an authorized user. REST paths need a **music user token** and a **developer JWT** stored at `authorize()` / `setDeveloperToken()` time ([AUTH.md](./AUTH.md)).
+Requires an authorized user. REST paths need a **music user token** and a **developer JWT** stored at `authorize()` / `setDeveloperToken()` time ([AUTH.md](./AUTH.md)). Native MusicKit recommendations use the system MusicKit account after authorization.
 
 ## Types
 

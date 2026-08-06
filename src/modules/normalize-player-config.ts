@@ -74,5 +74,11 @@ export function stubConfigurePlayerResponse(
     },
     // Force last: stubs do not implement AVAudioSession mixing.
     mixWithOthers: false,
+    // Honesty flags — iOS returns a real session/backend without these keys.
+    supportedFeatures: {
+      mixWithOthers: false,
+      audioSession: false,
+      systemPlayer: false,
+    },
   };
 }

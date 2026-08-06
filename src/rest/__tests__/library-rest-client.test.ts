@@ -1,4 +1,5 @@
 jest.mock('../../web/apple-music-errors', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factory is hoisted
   const { AppleMusicErrorCode } = require('../../constants/apple-music-error-codes');
   const coded = (code: string, message: string) => Object.assign(new Error(message), { code, message });
   return {

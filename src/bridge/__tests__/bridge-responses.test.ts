@@ -12,6 +12,11 @@ describe('BridgeResponses', () => {
       expect.objectContaining({
         mixWithOthers: false,
         playerType: 'system',
+        supportedFeatures: {
+          mixWithOthers: false,
+          audioSession: false,
+          systemPlayer: false,
+        },
       }),
     );
   });

@@ -121,7 +121,7 @@ Full per-method matrix: **[docs/PLATFORM_IMPLEMENTATION.md](./docs/PLATFORM_IMPL
 | **Library** read APIs | **REST** `/v1/me/library/...` (pagination parity); native `MusicLibraryRequest` only for **playback** ID resolve | **Apple Music REST API** + music user token |
 | **Catalog** search / get | Native MusicKit first; REST fallback / relationships / charts | **Apple Music REST API** |
 | **History**           | REST `/v1/me/recent/*`, heavy-rotation, recently-added | REST |
-| **Recommendations**   | REST `/v1/me/recommendations`, Replay summaries    | REST |
+| **Recommendations**   | MusicKit when no `ids`; REST for `ids` / Replay | REST |
 | Catalog playback      | Native player                                      | `MediaPlayerController` + catalog queue provider           |
 | Library playback      | Native player queue                                | REST ID resolve + playback AAR                             |
 
