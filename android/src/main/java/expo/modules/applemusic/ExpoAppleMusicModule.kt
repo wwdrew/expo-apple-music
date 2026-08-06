@@ -22,24 +22,14 @@ class ExpoAppleMusicModule : Module() {
   private lateinit var authLauncher: AppContextActivityResultLauncher<MusicKitAuthInput, MusicKitAuthOutput>
   private var playbackObserver: AndroidPlaybackObserver? = null
 
-  @Volatile
-  private var playbackErrorHandlerWired = false
-
   private val moduleScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
   private val reactContext
     get() = requireNotNull(appContext.reactContext) { "React Application Context is null" }
 
+  /** Pure singleton accessor — no side effects (handler is wired in `definition`). */
   private val playbackController: AndroidPlaybackController
     get() = AndroidPlaybackController.getInstance(reactContext)
-
-  private fun wirePlaybackErrorHandlerOnce() {
-    if (playbackErrorHandlerWired) return
-    AndroidPlaybackController.getInstance(reactContext).playbackErrorHandler = { error, operation ->
-      emitPlaybackError(error, operation)
-    }
-    playbackErrorHandlerWired = true
-  }
 
   private val catalogService: AndroidCatalogService
     get() = AndroidCatalogService(reactContext)
@@ -76,7 +66,6 @@ class ExpoAppleMusicModule : Module() {
     )
 
     OnStartObserving {
-      wirePlaybackErrorHandlerOnce()
       val observer = AndroidPlaybackObserver(reactContext)
       observer.delegate =
         object : AndroidPlaybackObserverDelegate {
@@ -105,6 +94,8 @@ class ExpoAppleMusicModule : Module() {
       playbackObserver = null
     }
 
+    // After OnCreate: reactContext + activity contracts are available. Wire once here
+    // so playback errors emit even before JS starts observing.
     RegisterActivityContracts {
       authLauncher =
         registerForActivityResult(
@@ -112,7 +103,9 @@ class ExpoAppleMusicModule : Module() {
             appContext.throwingActivity
           },
         )
-      wirePlaybackErrorHandlerOnce()
+      playbackController.playbackErrorHandler = { error, operation ->
+        emitPlaybackError(error, operation)
+      }
     }
 
     registerAuthBridge(
