@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Text } from "react-native";
 import { ApiScreen } from "../components/ApiScreen";
 import { IdField } from "../components/IdField";
+import { PlatformSupportBadges } from "../components/PlatformSupportBadges";
 import { useApp } from "../context/AppContext";
 import { playCatalogSong } from "./catalog";
 import { RunButton } from "./helpers";
@@ -16,7 +17,7 @@ export function ConfigurePlayerDemo() {
     void Player.configurePlayer(options)
       .then((c) =>
         appendLog(
-          `${label} → playerType=${c.playerType}, mixWithOthers=${c.mixWithOthers}, session=${JSON.stringify(c.audioSession)}`,
+          `${label} → playerType=${c.playerType}, mixWithOthers=${c.mixWithOthers}, session=${JSON.stringify(c.audioSession)}, supportedFeatures=${JSON.stringify(c.supportedFeatures ?? null)}`,
         ),
       )
       .catch((e) => appendLog(`error: ${formatApiError(e)}`));
@@ -25,6 +26,7 @@ export function ConfigurePlayerDemo() {
   return (
     <ApiScreen
       hint="Default backend is application (in-app). Prefer player (alias of playerType). system is iOS Music app / system playback. Android/web only echo the payload."
+      headerExtra={<PlatformSupportBadges gaps={["configurePlayerFull"]} />}
       actions={
         <>
           <RunButton title="Defaults (application, exclusive)" onPress={() => run("defaults", {})} />
@@ -61,6 +63,7 @@ export function SetQueueDemo() {
       hint="Catalog ids only. Station queues work on iOS/web; Android permanently rejects them (UNSUPPORTED_PLATFORM). Call Player.play() after queueing unless you use Queue + play."
       headerExtra={
         <>
+          <PlatformSupportBadges gaps={["androidStationQueue"]} />
           <IdField label="Song id" value={songId} onChangeText={setSongId} />
           <IdField label="Album id" value={albumId} onChangeText={setAlbumId} />
         </>

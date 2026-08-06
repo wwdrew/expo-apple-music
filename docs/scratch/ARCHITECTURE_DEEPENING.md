@@ -284,6 +284,7 @@ Web **Catalog** / **Library** / **History** call shared TS REST **adapter** (And
 | 2026-08-06 | P8 | Android/Web probeLibraryAccess throws on hard failures; AUTH.md note; iOS MusicKit unchanged |
 | 2026-08-06 | P9 | Example Auth readiness checklist + setQueue station-unsupported-on-Android note |
 | 2026-08-06 | P1 | Playback pure JVM tests: LibraryIds, MediaType, station message, PlaybackErrorMessages |
+| 2026-08-06 | — | Pre-release polish: ADRs 0001/0002; native Recommendations.get; configurePlayer `supportedFeatures`; Android station `UNSUPPORTED_PLATFORM`; CI lint; QA web soak; example platform-gap badges |
 
 ---
 
