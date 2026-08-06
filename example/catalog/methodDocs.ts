@@ -104,13 +104,13 @@ const OVERRIDES: Record<string, Record<string, DocOverride>> = {
   player: {
     setQueue: {
       description:
-        "Queues a catalog song, album, playlist, or station for playback. Does not automatically start playback — call Player.play() unless your UI handles transport separately.",
+        "Queues a catalog song, album, playlist, or station for playback. Does not automatically start playback — call Player.play() unless your UI handles transport separately. Station type works on iOS and web; Android rejects station queues until MusicKit Android supports radio.",
       params: [
         { name: "itemId", type: "string", description: "Catalog resource id.", required: true },
         {
           name: "type",
           type: "MusicItem",
-          description: "song | album | playlist | station",
+          description: "song | album | playlist | station (station unsupported on Android)",
           required: true,
         },
       ],
