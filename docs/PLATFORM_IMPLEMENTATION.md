@@ -60,13 +60,15 @@ iOS library **reads** use REST for pagination parity with Android/web (`limit`/`
 
 ## History
 
+All history methods use **REST** on iOS (`HistoryService` → `AppleMusicRestClient`) and Android — there is no MusicKit history read path.
+
 | JS API | iOS | Android |
 |--------|-----|---------|
-| `History.getRecentlyPlayedResources()` | REST `GET /v1/me/recent/played` | REST `GET /v1/me/recent/played` |
-| `History.getRecentlyPlayedTracks()` | REST | REST |
-| `History.getHeavyRotation()` | REST | REST |
-| `History.getRecentlyPlayedStations()` | REST | REST |
-| `History.getRecentlyAdded()` | REST | REST |
+| `History.getRecentlyPlayedResources()` | REST `GET /v1/me/recent/played` (often capped ~10) | REST `GET /v1/me/recent/played` |
+| `History.getRecentlyPlayedTracks()` | REST `GET /v1/me/recent/played/tracks` | REST |
+| `History.getHeavyRotation()` | REST `GET /v1/me/history/heavy-rotation` | REST |
+| `History.getRecentlyPlayedStations()` | REST `GET /v1/me/recent/radio-stations` | REST |
+| `History.getRecentlyAdded()` | REST `GET /v1/me/library/recently-added` | REST |
 
 ---
 
@@ -123,7 +125,7 @@ On **Android**, catalog `setQueue` requires a music user token in the native ses
 
 | Area | Note |
 |------|------|
-| Recent played containers | Apple caps some `/v1/me/recent/*` responses (e.g. 10 items); native vs REST may differ slightly in ordering |
+| Recent played containers | Apple caps some `/v1/me/recent/*` responses (e.g. ~10 items on resources); iOS and Android both use REST |
 | `Auth.checkSubscription()` | Android infers flags; iOS uses MusicKit subscription APIs |
 | Catalog station queue | iOS native ✅; Android playback AAR ❌ |
 | `Player.configurePlayer` | iOS: real backend + AVAudioSession; Android/web: stub payload only ([PLAYBACK.md](./PLAYBACK.md)) |
